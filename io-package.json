@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "miele-local",
-    "version": "0.3.39",
+    "version": "0.3.42",
     "titleLang": {
       "en": "Miele@local",
       "de": "Miele@local",
@@ -52,6 +52,45 @@
     "readme": "https://github.com/SmarthomeElektroniker/ioBroker.miele-local/blob/main/README.md",
     "loglevel": "info",
     "news": {
+      "0.3.42": {
+        "en": "All program phases now have German names; status codes 144 (default) and 145 (locked) added. Translations and test idea by meistermopper (#14).",
+        "de": "Alle Programmphasen haben jetzt deutsche Namen; Statuswerte 144 (Standard) und 145 (Gesperrt) ergänzt. Übersetzungen und Testidee von meistermopper (#14).",
+        "ru": "Все фазы программ теперь имеют немецкие названия; добавлены коды состояния 144 (стандарт) и 145 (заблокировано). Переводы и идея теста от meistermopper (#14).",
+        "pt": "Todas as fases de programa têm agora nomes em alemão; adicionados os estados 144 (padrão) e 145 (bloqueado). Traduções e ideia de teste de meistermopper (#14).",
+        "nl": "Alle programmafasen hebben nu Duitse namen; statuscodes 144 (standaard) en 145 (vergrendeld) toegevoegd. Vertalingen en testidee van meistermopper (#14).",
+        "fr": "Toutes les phases de programme ont désormais des noms allemands ; codes d'état 144 (par défaut) et 145 (verrouillé) ajoutés. Traductions et idée de test par meistermopper (#14).",
+        "it": "Tutte le fasi del programma hanno ora nomi tedeschi; aggiunti i codici di stato 144 (predefinito) e 145 (bloccato). Traduzioni e idea del test di meistermopper (#14).",
+        "es": "Todas las fases de programa tienen ahora nombres en alemán; añadidos los estados 144 (predeterminado) y 145 (bloqueado). Traducciones e idea de prueba de meistermopper (#14).",
+        "pl": "Wszystkie fazy programów mają teraz niemieckie nazwy; dodano kody stanu 144 (domyślny) i 145 (zablokowany). Tłumaczenia i pomysł testu od meistermopper (#14).",
+        "uk": "Усі фази програм тепер мають німецькі назви; додано коди стану 144 (стандарт) і 145 (заблоковано). Переклади та ідея тесту від meistermopper (#14).",
+        "zh-cn": "所有程序阶段现已有德语名称；新增状态码 144（默认）和 145（锁定）。翻译和测试思路来自 meistermopper (#14)。"
+      },
+      "0.3.41": {
+        "en": "Device types corrected (16 microwave, 67 dialog oven, 25 dish warmer, washer-dryer uses washing machine programs); new types: robot vacuum, steam oven combi, steam oven with microwave (418 programs), professional appliances. Credits for tables from Home Assistant.",
+        "de": "Gerätetypen berichtigt (16 Mikrowelle, 67 Dialoggarer, 25 Wärmeschublade, Waschtrockner mit Waschmaschinenprogrammen); neue Typen: Saugroboter, Dampfbackofen, Dampfgarer mit Mikrowelle (418 Programme), Profi-Geräte. Danksagung für die Tabellen aus Home Assistant.",
+        "ru": "Исправлены типы устройств (16 микроволновка, 67 Dialog-печь, 25 подогреватель посуды, стирально-сушильная машина с программами стиральной машины); новые типы: робот-пылесос, пароконвектомат, пароварка с микроволновкой (418 программ), профессиональные приборы. Благодарность Home Assistant за таблицы.",
+        "pt": "Tipos de aparelho corrigidos (16 micro-ondas, 67 forno Dialog, 25 aquecedor de loiça, máquina de lavar e secar com programas de lavagem); novos tipos: aspirador robô, forno a vapor combinado, forno a vapor com micro-ondas (418 programas), aparelhos profissionais. Créditos pelas tabelas do Home Assistant.",
+        "nl": "Apparaattypes gecorrigeerd (16 magnetron, 67 Dialog-oven, 25 servieswarmer, was-droogcombinatie met wasmachineprogramma's); nieuwe types: robotstofzuiger, combi-stoomoven, stoomoven met magnetron (418 programma's), professionele apparaten. Dank aan Home Assistant voor de tabellen.",
+        "fr": "Types d'appareils corrigés (16 micro-ondes, 67 four Dialog, 25 chauffe-vaisselle, lave-linge séchant avec programmes de lave-linge) ; nouveaux types : aspirateur robot, four vapeur combiné, four vapeur avec micro-ondes (418 programmes), appareils professionnels. Remerciements à Home Assistant pour les tables.",
+        "it": "Tipi di apparecchio corretti (16 microonde, 67 forno Dialog, 25 scaldavivande, lavasciuga con programmi della lavatrice); nuovi tipi: robot aspirapolvere, forno a vapore combinato, forno a vapore con microonde (418 programmi), apparecchi professionali. Ringraziamenti a Home Assistant per le tabelle.",
+        "es": "Tipos de aparato corregidos (16 microondas, 67 horno Dialog, 25 calientaplatos, lavadora-secadora con programas de lavadora); nuevos tipos: robot aspirador, horno de vapor combinado, horno de vapor con microondas (418 programas), aparatos profesionales. Agradecimientos a Home Assistant por las tablas.",
+        "pl": "Poprawiono typy urządzeń (16 mikrofalówka, 67 piekarnik Dialog, 25 podgrzewacz naczyń, pralko-suszarka z programami pralki); nowe typy: robot sprzątający, piekarnik parowy kombi, piekarnik parowy z mikrofalą (418 programów), urządzenia profesjonalne. Podziękowania dla Home Assistant za tabele.",
+        "uk": "Виправлено типи пристроїв (16 мікрохвильова піч, 67 піч Dialog, 25 підігрівач посуду, прально-сушильна машина з програмами пральної машини); нові типи: робот-пилосос, комбі-пароварка, пароварка з мікрохвильовою піччю (418 програм), професійні прилади. Подяка Home Assistant за таблиці.",
+        "zh-cn": "修正设备类型（16 微波炉、67 Dialog 烤箱、25 暖碟机、洗干一体机使用洗衣机程序）；新增类型：扫地机器人、蒸烤箱、微波蒸箱（418 个程序）、专业设备。感谢 Home Assistant 提供的表格。"
+      },
+      "0.3.40": {
+        "en": "README: hints for a failing login (ad blocker), moving to another system and why mDNS may find nothing; clearer log message when no appliance is found (#12).",
+        "de": "README: Hinweise bei scheiterndem Login (Werbeblocker), zum Umzug auf ein anderes System und warum mDNS nichts findet; deutlichere Logmeldung, wenn kein Gerät gefunden wird (#12).",
+        "ru": "README: подсказки при неудачном входе (блокировщик рекламы), при переносе на другую систему и о том, почему mDNS ничего не находит; более понятное сообщение в журнале, если устройство не найдено (#12).",
+        "pt": "README: dicas para um login falhado (bloqueador de anúncios), para mudar para outro sistema e porque o mDNS pode não encontrar nada; mensagem de registo mais clara quando nenhum aparelho é encontrado (#12).",
+        "nl": "README: tips bij een mislukte login (adblocker), bij verhuizing naar een ander systeem en waarom mDNS niets vindt; duidelijkere logmelding als er geen apparaat wordt gevonden (#12).",
+        "fr": "README : conseils en cas d'échec de connexion (bloqueur de publicités), pour migrer vers un autre système et pourquoi mDNS ne trouve rien ; message de journal plus clair lorsqu'aucun appareil n'est trouvé (#12).",
+        "it": "README: suggerimenti per un login non riuscito (blocco pubblicità), per il trasferimento su un altro sistema e perché mDNS non trova nulla; messaggio di log più chiaro quando non viene trovato alcun apparecchio (#12).",
+        "es": "README: consejos para un inicio de sesión fallido (bloqueador de anuncios), para migrar a otro sistema y por qué mDNS no encuentra nada; mensaje de registro más claro cuando no se encuentra ningún aparato (#12).",
+        "pl": "README: wskazówki przy nieudanym logowaniu (bloker reklam), przy przenoszeniu na inny system i dlaczego mDNS nic nie znajduje; czytelniejszy komunikat w dzienniku, gdy nie znaleziono urządzenia (#12).",
+        "uk": "README: підказки при невдалому вході (блокувальник реклами), при перенесенні на іншу систему та чому mDNS нічого не знаходить; зрозуміліше повідомлення в журналі, якщо пристрій не знайдено (#12).",
+        "zh-cn": "README：登录失败（广告拦截器）、迁移到其他系统以及 mDNS 找不到设备原因的提示；未找到设备时日志信息更清晰 (#12)。"
+      },
       "0.3.39": {
         "en": "Unknown program or phase IDs are shown as \"Programm 201\" instead of keeping the text of the previous program. Dishwasher program IDs of the G7771 added (#13).",
         "de": "Unbekannte Programm- oder Phasennummern erscheinen als „Programm 201“, statt den Text des vorigen Programms stehen zu lassen. Programmnummern des Geschirrspülers G7771 ergänzt (#13).",

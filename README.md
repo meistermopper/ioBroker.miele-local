@@ -47,6 +47,14 @@ so the page stops at a spinning wheel and you read the address out of the browse
 GroupID and GroupKey are then stored in the instance configuration, the key encrypted. You never
 need this procedure again.
 
+**Login fails with `invalid_request … unknown contextId`?** Miele's login service switches between
+two domains during sign-in and loses its session when an ad blocker or strict third-party cookie
+protection interferes. Open the login page in a private window without extensions.
+
+**Moving to another system.** GroupID and GroupKey never change. A backup of the ioBroker
+configuration (e.g. BackItUp) carries them over; on a fresh system repeating the login takes two
+minutes. The admin page shows the key only as a placeholder.
+
 ## What you get
 
 Every appliance becomes one device with its serial number as the ID. Below it:
@@ -123,7 +131,9 @@ Every field carries its explanation underneath it in the admin; this page does n
 | outbound | TCP 443 → miele-iot.com | fetch the GroupKey | login only |
 
 Without push **no inbound port** is needed. For mDNS, ioBroker and the appliances must sit in the
-same broadcast segment.
+same broadcast segment. Separate IoT WLANs or VLANs, firewalls (including the Windows firewall on
+a test machine) and routers that filter multicast stop discovery just as well. In all these cases
+the manual IP list is the reliable way.
 
 **Docker.** In a container with bridge networking multicast is not forwarded, so discovery finds
 nothing — enter the IP addresses by hand, polling then works normally. Push does not work there at
@@ -226,6 +236,22 @@ engineering work of the projects `MieleRESTServer` (akappner),
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### 0.3.42
+
+- (SmarthomeElektroniker) All program phases have German names now, a new test keeps it that way; status codes 144 (default) and 145 (locked) added. Translations and test idea by @meistermopper (#14)
+- (SmarthomeElektroniker) Tumble dryer phases no longer point at the washing machine phase table (no visible change, the numbers never overlapped)
+
+### 0.3.41
+
+- (SmarthomeElektroniker) Device types corrected: 16 is the microwave (was: steam oven combi), 67 the dialog oven (was: dish warmer, now 25), the washer-dryer (24) uses the washing machine programs, the oven with microwave (13) its own phases
+- (SmarthomeElektroniker) New device types: semi-professional/professional washers, dryers and dishwashers, robot vacuum (23), steam oven combi (31), steam oven with microwave (45, 418 programs), steam oven MK2 (73); dishwasher program 5 added
+- (SmarthomeElektroniker) Programs without a German name are shown readably ("Artichokes small") instead of as raw identifier
+- (SmarthomeElektroniker) Credits for the tables taken over from Home Assistant, ha-miele-at-lan and ioBroker.miele-unbound
+
+### 0.3.40
+
+- (SmarthomeElektroniker) README: hints for a failing login (ad blocker), moving to another system and why mDNS may find nothing; clearer log message when no appliance is found (#12, thanks @meistermopper)
 
 ### 0.3.39
 
@@ -465,6 +491,15 @@ Most of the above was contributed by [meistermopper](https://github.com/meisterm
   First release under the new package name.
 
 [Older changelog entries can be found here](CHANGELOG_OLD.md)
+
+## Credits
+
+The program and phase tables in `lib/enums.js` and the mapping of device types to tables come
+from [Home Assistant](https://github.com/home-assistant/core) (Apache License 2.0, © Home Assistant
+Authors), taken over via [ha-miele-at-lan](https://github.com/tiehfood/ha-miele-at-lan) (MIT, ©
+tiehfood) and cross-checked against
+[ioBroker.miele-unbound](https://github.com/meistermopper/ioBroker.miele-unbound) (MIT, ©
+meistermopper). Thanks to all three projects.
 
 ## License
 

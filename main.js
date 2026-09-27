@@ -312,7 +312,11 @@ class MieleLocal extends utils.Adapter {
         await this.discoverDevices();
 
         if (!Object.keys(this.devices).length) {
-            this.log.warn('No Miele devices found (neither via mDNS nor manually configured).');
+            this.log.warn(
+                'No Miele devices found (neither via mDNS nor manually configured). If the appliances are in ' +
+                    'another subnet/VLAN, behind a firewall or multicast is blocked (e.g. Docker bridge network), ' +
+                    "enter their IP addresses on the 'Appliances' tab.",
+            );
         } else {
             await this.setStateAsync('info.connection', { val: true, ack: true });
         }
