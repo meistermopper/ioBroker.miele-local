@@ -45,14 +45,14 @@ describe('Kontrolle: die belegte Wasserzuordnung', () => {
     });
 
     it('schreibt in den Bericht, woher der Vergleichswert kam', () => {
-        expect(k.bericht(verlaufAusEcht())).to.match(/gegen cloud/);
+        expect(k.bericht(verlaufAusEcht())).to.match(/against cloud/);
     });
 
     it('nennt die groesste Einzelabweichung, nicht nur den Mittelwert', () => {
         // Der Mittelwert allein verdeckt einen einzelnen Ausschlag.
         const s = k.stand(verlaufAusEcht(), 'waterL');
         expect(s.groesste).to.be.above(s.mittel);
-        expect(s.text).to.match(/groesste/);
+        expect(s.text).to.match(/largest/);
     });
 });
 
@@ -71,8 +71,8 @@ describe('Kontrolle: wenn die Zuordnung wegläuft', () => {
                                            cloud: { waterL: 17 } }));
         const s = k.stand(v, 'waterL');
         expect(s.warnt).to.be.true;
-        expect(s.text).to.match(/ACHTUNG/);
-        expect(s.text).to.match(/Feldzuordnung koennte nicht mehr stimmen/);
+        expect(s.text).to.match(/WARNING/);
+        expect(s.text).to.match(/field mapping may no longer be correct/);
     });
 
     it('vergisst alte Ausreisser, sobald es wieder passt', () => {
@@ -104,7 +104,7 @@ describe('Kontrolle: Luecken', () => {
         expect(s.luecken).to.equal(1);
         expect(s.zyklen).to.equal(8);           // die Luecke zaehlt NICHT als Vergleich
         expect(s.mittel).to.be.below(0.01);     // und verzerrt die Genauigkeit nicht
-        expect(s.text).to.match(/1 Zyklen ohne lokalen Wert/);
+        expect(s.text).to.match(/1 cycles without a local value/);
     });
 
     it('meldet ein Feld, das gar nichts liefert', () => {
@@ -113,7 +113,7 @@ describe('Kontrolle: Luecken', () => {
             v = k.aufnehmen(v, k.vergleichen({ zeit: T0, lokal: { waterL: 0 },
                                                cloud: { waterL: 60 } }));
         }
-        expect(k.stand(v, 'waterL').text).to.match(/liefert nichts/);
+        expect(k.stand(v, 'waterL').text).to.match(/delivers nothing/);
     });
 });
 
@@ -155,7 +155,7 @@ describe('Kontrolle: Robustheit', () => {
 
     it('verkraftet einen leeren Verlauf', () => {
         expect(k.stand([], 'waterL').zyklen).to.equal(0);
-        expect(k.bericht([])).to.match(/noch keine/);
+        expect(k.bericht([])).to.match(/no comparisons/);
     });
 
     it('verkraftet Muell in den Werten', () => {

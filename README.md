@@ -88,7 +88,7 @@ carries the plain-text list, so in most places the text state is no longer neede
 ### `eco` — energy and water
 
 `eco.energy` (kWh), `eco.energyWh` (Wh), `eco.water` (l) where the appliance provides them, plus
-`eco.quelle` naming which source a value came from. Read over DOP2; so far washing machines
+`eco.source` naming which source a value came from. Read over DOP2; so far washing machines
 deliver it. **The value the appliance reports is its own expectation, not a measurement.** For a
 real figure, enter a metering plug's counter state on the **Polling & values** tab — the adapter
 then records what each programme actually drew.
@@ -171,29 +171,29 @@ Everything in this section is **off by default** and is not needed for day-to-da
 exists for one question: which raw field of *your* appliance holds energy and water. The field
 numbers differ per series, and the defaults in the adapter come from a WCR860.
 
-**Raw fields.** Writes all fields of the eco leaf to `eco.felderJson` instead of only the two
+**Raw fields.** Writes all fields of the eco leaf to `eco.fieldsJson` instead of only the two
 evaluated ones.
 
 **Data collection.** Records one dataset per completed programme — model, programme, all raw
 fields, and at the end the final state of every answering leaf. To turn that into a mapping the
 adapter needs a reference value: either from a cloud adapter, or entered by hand into
-`sammlung.eingabeEnergie` and `sammlung.eingabeWasser` after a programme. `sammlung.fortschritt`
-says what is still missing, `sammlung.befund` holds the result: which field fits, with which
+`collection.inputEnergy` and `collection.inputWater` after a programme. `collection.progress`
+says what is still missing, `collection.finding` holds the result: which field fits, with which
 divisor, and how closely.
 
 **Leaf scan.** DOP2 addresses data as `unit/attribute`, and only a handful of those addresses are
 documented anywhere. The scan works through the address space gently enough not to overwhelm the
-module; `sammlung.leafScanJson` collects what answered. `sammlung.leafVerlaufFein` records a
+module; `collection.scanJson` collects what answered. `collection.trendLeaf` records a
 single leaf closely while a programme runs — the field whose value grows with consumption is the
 one you are looking for.
 
 **CSV export.** The button on the Diagnostics tab writes two tables into the instance's file area
 and opens the first:
 
-- `sammlung-<date>.csv` — one row per programme: times, programme, the reference values, every raw
+- `collection-<date>.csv` — one row per programme: times, programme, the reference values, every raw
   field in its own column, and for each leaf field the reading at start, at end and the difference
   between them. For lifetime counters only that difference means anything.
-- `befund-<date>.csv` — one row per field: how well it matches the reference, the best divisor,
+- `finding-<date>.csv` — one row per field: how well it matches the reference, the best divisor,
   the average and the largest deviation. This is the answer the collection exists for.
 
 Semicolon separated, decimal comma, BOM — a double click opens them in a spreadsheet.
@@ -236,6 +236,28 @@ engineering work of the projects `MieleRESTServer` (akappner),
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### 0.3.46
+- (SmarthomeElektroniker) Only the running appliance is polled at the short interval ("Poll interval (active)"); idle appliances keep the idle interval. Until now all appliances were polled at the short interval as soon as one was running - fewer requests to the Miele modules, which serve only one connection at a time
+
+### 0.3.45
+- (SmarthomeElektroniker) The last German state ID is gone: `eco.quelle` is now `eco.source`, its value is always English. Existing installations are migrated on start
+- (SmarthomeElektroniker) `statusText`, `programText`, `programPhaseText`, `programTypeText` and `dryingStepText` follow the "German names" option - with the option off they are English (until now they were always German)
+- (SmarthomeElektroniker) Remaining German log and error messages translated; CSV export files are named `collection-<date>.csv` and `finding-<date>.csv`
+- (SmarthomeElektroniker) All JSDoc comments complete (no lint warnings left); `@iobroker/testing` 6.3.0
+- (SmarthomeElektroniker) `eco.felderJson` is now `eco.fieldsJson` (migrated on start)
+- (SmarthomeElektroniker) Settings use English keys: `sammlerAktiv`/`sammlerCloud`/`sammlerCloudInstanz` became `collectorActive`/`collectorCloud`/`collectorCloudInstance`, `leafDatenpunkte` became `leafStates`, the energy meter table `zaehler` became `energyMeters`. Existing settings are carried over once on start (review 2026-10-03)
+- (SmarthomeElektroniker) Background loops (eco, operating hours, seconds, discovery, push renewal, leaf trend) schedule their next run only after the previous one finished - no overlapping runs when an appliance answers slowly
+
+### 0.3.44
+- (SmarthomeElektroniker) History objects are only rewritten when they actually changed - this prevents an empty (null) point in the history adapter after every adapter restart
+
+### 0.3.43
+
+- (SmarthomeElektroniker) All log messages are English now; diagnostic texts in states (`finding`, `check`, `progress`, `scanState`, `trendSize`), error messages and the CSV export too (review 2026-09-27)
+- (SmarthomeElektroniker) Admin UI: all texts use English i18n keys; the diagnostics tab is translated into all 11 languages
+- (SmarthomeElektroniker) README: diagnostics section uses the current English state IDs
+- (SmarthomeElektroniker) `@iobroker/testing` 6.2.2; `common.news` limited to 7 entries
 
 ### 0.3.42
 
@@ -327,7 +349,7 @@ engineering work of the projects `MieleRESTServer` (akappner),
 - **Water: the appliance's own EcoFeedback comes first.** Where DOP2 2/1585 exists, its value for
   the last programme is used; only where it does not does the adapter fall back to counting flow
   meter impulses (field 21 / 200, verified against the house water meter over 24 programmes). The
-  new datapoint `eco.quelle` says which of the two a value came from.
+  new datapoint `eco.source` (called `eco.quelle` before 0.3.45) says which of the two a value came from.
 - **The collector records every leaf.** At the end of a programme the adapter reads each answering
   leaf once, gently (five seconds between requests, in the background), and appends the final state
   to the record. This is what makes the collection useful for appliances that do not answer 2/6195

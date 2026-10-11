@@ -1,6 +1,6 @@
 {
   "name": "iobroker.miele-local",
-  "version": "0.3.42",
+  "version": "0.3.46",
   "description": "Connect modern Miele@Home appliances locally without the internet (MieleH256/DOP2).",
   "author": "Immanuel <github@freitag.online>",
   "license": "MIT",
@@ -35,7 +35,7 @@
     "@iobroker/adapter-dev": "^1.5.0",
     "@iobroker/dev-server": "^0.8.0",
     "@iobroker/eslint-config": "^2.3.4",
-    "@iobroker/testing": "^6.2.1",
+    "@iobroker/testing": "^6.3.0",
     "@tsconfig/node22": "^22.0.6",
     "@types/node": "^22"
   },

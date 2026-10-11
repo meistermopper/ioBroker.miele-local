@@ -126,12 +126,12 @@ describe('EcoFeedback-Objekte', () => {
     });
 
     it('legt genau die vier Punkte an - das Diagnosefeld nur auf Wunsch', () => {
-        // "quelle" kam am 15.09.2026 dazu: Seither kann eine Zahl vom Geraet selbst stammen
+        // "source" (bis 0.3.44 "quelle") kam am 15.09.2026 dazu: Seither kann eine Zahl vom Geraet selbst stammen
         // (EcoFeedback aus 2/1585) oder aus der eigenen Impulszaehlung. Ohne den Hinweis waere
         // am Datenpunkt nicht zu sehen, welcher Fall vorliegt.
         expect(objdef.ecoStates(true, false).map(d => d.sub))
-            .to.deep.equal(['energy', 'energyWh', 'water', 'quelle']);
-        expect(objdef.ecoStates(true, true).some(d => d.sub === 'felderJson')).to.be.true;
+            .to.deep.equal(['energy', 'energyWh', 'water', 'source']);
+        expect(objdef.ecoStates(true, true).some(d => d.sub === 'fieldsJson')).to.be.true;
     });
 
     it('gibt jedem angelegten Punkt Typ und Vorgabewert', () => {
@@ -179,7 +179,7 @@ describe('Eco: war die letzte Ablesung der Endstand?', () => {
             wert: 20.77, vorletzterWert: 10.11,
         });
         expect(r.vollstaendig).to.equal(false);
-        expect(r.grund).to.contain('Zwischenstand');
+        expect(r.grund).to.contain('interim value');
     });
 
     it('nimmt eine alte Ablesung an, wenn der Zaehler laengst steht', () => {

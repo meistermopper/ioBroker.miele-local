@@ -41,3 +41,26 @@ describe('Enums', () => {
         expect(text).to.equal(enumsDe.PhaseNameDe.program_running);
     });
 });
+
+describe('Klartexte folgen der Sprachoption (0.3.45)', () => {
+    const { STATE_FIELDS } = require('../lib/objects');
+    const text = (feld, v, ctx) => STATE_FIELDS[feld].decode(v, ctx)[1].val;
+
+    it('schreibt bei abgeschalteten deutschen Namen englische Texte', () => {
+        // Bis 0.3.44 standen Status, Programm und Phase immer deutsch im Datenpunkt.
+        const en = { deviceType: 1, german: false };
+        expect(text('Status', 5, en)).to.equal('In use');
+        expect(text('ProgramID', 1, en)).to.equal('Cottons');
+        expect(text('ProgramPhase', 260, en)).to.equal('Main wash');
+        expect(text('ProgramType', 1, en)).to.equal('Own program');
+        expect(text('ProgramID', 9999, en)).to.equal('Program 9999');
+    });
+
+    it('bleibt deutsch, wenn die Option gesetzt ist oder fehlt', () => {
+        for (const ctx of [{ deviceType: 1, german: true }, { deviceType: 1 }]) {
+            expect(text('Status', 5, ctx)).to.equal('In Betrieb');
+            expect(text('ProgramID', 1, ctx)).to.equal('Baumwolle');
+            expect(text('ProgramID', 9999, ctx)).to.equal('Programm 9999');
+        }
+    });
+});

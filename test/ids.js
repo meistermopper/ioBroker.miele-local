@@ -36,7 +36,8 @@ describe('Objekt-IDs', () => {
     it('nennt fuer jeden alten Datenpunkt genau einen neuen', () => {
         const u = ids.umzuege('000111111111');
         expect(u).to.have.length(
-            Object.keys(ids.ALT.sammlung).length + Object.keys(ids.ALT.history).length);
+            Object.keys(ids.ALT.sammlung).length + Object.keys(ids.ALT.history).length +
+                Object.keys(ids.ALT.eco).length);
         // Keine zwei alten Punkte duerfen auf denselben neuen zeigen - das verlöre einen Wert.
         expect(new Set(u.map(x => x.neu)).size).to.equal(u.length);
         expect(new Set(u.map(x => x.alt)).size).to.equal(u.length);
@@ -59,7 +60,45 @@ describe('Objekt-IDs', () => {
         }
     });
 
+    it('zieht eco.quelle nach eco.source um (0.3.45, letzter deutscher Name im Baum)', () => {
+        expect(ids.umzuege('X')).to.deep.include({ alt: 'X.eco.quelle', neu: 'X.eco.source' });
+    });
+
     it('kennt den alten Kanal, um ihn nach dem Umzug zu entfernen', () => {
         expect(ids.alterKanal('000111111111')).to.equal('000111111111.sammlung');
+    });
+});
+
+describe('Einstellungen auf englische Namen umziehen (0.3.45, Review 03.10.2026)', () => {
+    it('übernimmt die alten Werte unter den neuen Namen und entfernt die alten', () => {
+        const { native, geaendert } = ids.konfigUmzug({
+            sammlerAktiv: true, sammlerCloud: true, sammlerCloudInstanz: 'mielecloudservice.1',
+            leafDatenpunkte: false, pollInterval: 15,
+            zaehler: [{ serial: '000111111111', datenpunkt: 'shelly.0.x.Energy' }],
+        });
+        expect(geaendert).to.be.true;
+        expect(native).to.deep.equal({
+            collectorActive: true, collectorCloud: true, collectorCloudInstance: 'mielecloudservice.1',
+            leafStates: false, pollInterval: 15,
+            energyMeters: [{ serial: '000111111111', stateId: 'shelly.0.x.Energy' }],
+        });
+    });
+
+    it('der alte Wert gewinnt gegen die beim Update ergänzte Vorgabe', () => {
+        // ioBroker ergänzt beim Update neue native-Schlüssel mit ihrer Vorgabe - die echte
+        // Einstellung des Nutzers steht dann noch unter dem alten Namen.
+        const { native } = ids.konfigUmzug({ sammlerAktiv: true, collectorActive: false });
+        expect(native).to.deep.equal({ collectorActive: true });
+    });
+
+    it('läuft genau einmal - danach gibt es nichts mehr umzuziehen', () => {
+        const erst = ids.konfigUmzug({ sammlerAktiv: true, zaehler: [{ serial: 'S', datenpunkt: 'D' }] }).native;
+        expect(ids.konfigUmzug(erst).geaendert).to.be.false;
+        expect(ids.konfigUmzug({ collectorActive: false, energyMeters: [] }).geaendert).to.be.false;
+        expect(ids.konfigUmzug(undefined).geaendert).to.be.false;
+    });
+
+    it('zieht eco.felderJson nach eco.fieldsJson um', () => {
+        expect(ids.umzuege('X')).to.deep.include({ alt: 'X.eco.felderJson', neu: 'X.eco.fieldsJson' });
     });
 });

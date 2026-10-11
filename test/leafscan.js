@@ -53,7 +53,7 @@ describe('Leaf-Scan: Fortsetzen', () => {
         let erg = {};
         for (let a = 1; a <= 10; a++) erg = ls.aufnehmen(erg, 2, a, { status: 500 });
         expect(ls.naechste(erg, 5, bereiche)).to.be.empty;
-        expect(ls.fortschritt(erg, bereiche).text).to.match(/fertig/);
+        expect(ls.fortschritt(erg, bereiche).text).to.match(/done/);
     });
 });
 

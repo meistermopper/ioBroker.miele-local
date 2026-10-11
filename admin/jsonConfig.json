@@ -4,12 +4,12 @@
     "items": {
         "tabLogin": {
             "type": "panel",
-            "label": "Anmeldung",
+            "label": "Login",
             "items": {
                 "_introLogin": {
                     "type": "staticText",
                     "newLine": true,
-                    "text": "Der Adapter ermittelt die lokalen Zugangsdaten (GroupID/GroupKey) einmalig über eine Anmeldung mit Ihrem Miele-Konto. Die Miele-App funktioniert danach unverändert weiter. Es werden keine Zugangsdaten an Dritte übertragen.",
+                    "text": "The adapter retrieves local credentials (GroupID/GroupKey) once by signing in with your Miele account. The Miele app continues to work as before. No credentials are transmitted to third parties.",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -18,55 +18,55 @@
                 },
                 "country": {
                     "type": "select",
-                    "label": "Land",
+                    "label": "Country",
                     "newLine": true,
                     "options": [
                         {
-                            "label": "Deutschland",
+                            "label": "Germany",
                             "value": "de"
                         },
                         {
-                            "label": "Österreich",
+                            "label": "Austria",
                             "value": "at"
                         },
                         {
-                            "label": "Schweiz",
+                            "label": "Switzerland",
                             "value": "ch"
                         },
                         {
-                            "label": "Niederlande",
+                            "label": "Netherlands",
                             "value": "nl"
                         },
                         {
-                            "label": "Frankreich",
+                            "label": "France",
                             "value": "fr"
                         },
                         {
-                            "label": "Italien",
+                            "label": "Italy",
                             "value": "it"
                         },
                         {
-                            "label": "Spanien",
+                            "label": "Spain",
                             "value": "es"
                         },
                         {
-                            "label": "Großbritannien",
+                            "label": "United Kingdom",
                             "value": "gb"
                         },
                         {
-                            "label": "Dänemark",
+                            "label": "Denmark",
                             "value": "dk"
                         },
                         {
-                            "label": "Schweden",
+                            "label": "Sweden",
                             "value": "se"
                         },
                         {
-                            "label": "Polen",
+                            "label": "Poland",
                             "value": "pl"
                         },
                         {
-                            "label": "Tschechien",
+                            "label": "Czechia",
                             "value": "cz"
                         },
                         {
@@ -82,18 +82,18 @@
                 },
                 "region": {
                     "type": "select",
-                    "label": "Cloud-Region",
+                    "label": "Cloud region",
                     "options": [
                         {
-                            "label": "Europa (EU)",
+                            "label": "Europe (EU)",
                             "value": "EU"
                         },
                         {
-                            "label": "Europa (EU2)",
+                            "label": "Europe (EU2)",
                             "value": "EU2"
                         },
                         {
-                            "label": "Asien (AS)",
+                            "label": "Asia (AS)",
                             "value": "AS"
                         }
                     ],
@@ -106,7 +106,7 @@
                 "_step1": {
                     "type": "staticText",
                     "newLine": true,
-                    "text": "Schritt 1: Auf „Login-Seite öffnen\" klicken und im Browser mit dem Miele-Konto anmelden. Am Ende versucht der Browser, eine Adresse der Form „miele://oauth2-code/?code=…&state=…\" zu öffnen. Diese vollständige Adresse (der „Code\") wird in Schritt 2 gebraucht.",
+                    "text": "Step 1: Click \"Open login page\" and sign in with your Miele account in the browser. At the end the browser tries to open an address of the form \"miele://oauth2-code/?code=…&state=…\". This complete address (the \"code\") is needed in step 2.",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -115,7 +115,7 @@
                 },
                 "openLogin": {
                     "type": "sendTo",
-                    "label": "Login-Seite öffnen",
+                    "label": "Open login page",
                     "command": "getAuthUrl",
                     "jsonData": "{ \"country\": \"${data.country}\" }",
                     "openUrl": true,
@@ -128,7 +128,7 @@
                 },
                 "_step1Header": {
                     "type": "header",
-                    "text": "Schritt 1: Entwicklertools im Browser vorbereiten",
+                    "text": "Step 1: Prepare browser developer tools",
                     "size": 5,
                     "newLine": true,
                     "xs": 12,
@@ -140,7 +140,7 @@
                 "_step1Text": {
                     "type": "staticText",
                     "newLine": true,
-                    "text": "1. Oben auf „Login-Seite öffnen“ klicken (ein neuer Browser-Tab öffnet sich).\n2. Im neuen Tab F12 drücken und auf den Reiter „Netzwerk“ (Network) wechseln.\n3. Protokollierung dauerhaft aktivieren:\n   • Chrome / Edge / Brave: Haken bei „Log beibehalten“ (Preserve log) setzen.\n   • Firefox: Zahnrad ⚙️ ➔ „Protokolle dauerhaft anzeigen“ (Persist Logs) aktivieren.",
+                    "text": "1. Click 'Open login page' above (a new browser tab opens).\n2. In the new tab, press F12 and switch to the 'Network' tab.\n3. Enable persistent logging:\n   • Chrome / Edge / Brave: Check 'Preserve log'.\n   • Firefox: Click gear ⚙️ ➔ check 'Persist Logs'.",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -149,7 +149,7 @@
                 },
                 "_step2Header": {
                     "type": "header",
-                    "text": "Schritt 2: Bei Miele anmelden",
+                    "text": "Step 2: Sign in with Miele",
                     "size": 5,
                     "newLine": true,
                     "xs": 12,
@@ -161,7 +161,7 @@
                 "_step2Text": {
                     "type": "staticText",
                     "newLine": true,
-                    "text": "1. E-Mail und Passwort deines Miele-App-Kontos eingeben und auf „Anmeldung“ klicken.\n2. Wichtig: Nach dem Login bleibt die Seite bei einem sich drehenden Laderad stehen (oder meldet einen Fehler). Das ist völlig normal und bedeutet, dass die Anmeldung erfolgreich war!",
+                    "text": "1. Enter your Miele app account email and password and click 'Sign in'.\n2. Note: After login, the page will hang on a spinning loading wheel (or show an error). This is completely normal and indicates success!",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -170,7 +170,7 @@
                 },
                 "_step3Header": {
                     "type": "header",
-                    "text": "Schritt 3: Adresse kopieren & GroupKey ermitteln",
+                    "text": "Step 3: Copy redirect address & fetch GroupKey",
                     "size": 5,
                     "newLine": true,
                     "xs": 12,
@@ -182,7 +182,7 @@
                 "_step3Text": {
                     "type": "staticText",
                     "newLine": true,
-                    "text": "1. Im Netzwerk-Tab (F12) ganz nach unten zur letzten (meist rot markierten) Zeile scrollen. Sie beginnt mit „redirect?redirect_uri=miele...“ oder „miele://oauth2-code/...“.\n2. Rechtsklick auf diese Zeile ➔ „URL kopieren“ (bzw. „Adresse des Links kopieren“).\n3. Die kopierte Adresse unten in das Feld einfügen und auf „GroupKey ermitteln“ klicken.",
+                    "text": "1. In the Network tab (F12), scroll to the very last (often red) request starting with 'redirect?redirect_uri=miele...' or 'miele://oauth2-code/...'.\n2. Right-click that entry ➔ 'Copy URL' / 'Copy link address'.\n3. Paste the URL into the field below and click 'Fetch GroupKey'.",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -191,7 +191,7 @@
                 },
                 "redirectUrl": {
                     "type": "text",
-                    "label": "miele://-Redirect-URL",
+                    "label": "miele:// redirect URL",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -201,7 +201,7 @@
                 },
                 "fetchKey": {
                     "type": "sendTo",
-                    "label": "GroupKey ermitteln",
+                    "label": "Fetch GroupKey",
                     "command": "submitRedirect",
                     "jsonData": "{ \"redirectUrl\": \"${data.redirectUrl}\", \"region\": \"${data.region}\" }",
                     "variant": "contained",
@@ -215,7 +215,7 @@
                 "_status": {
                     "type": "staticText",
                     "newLine": true,
-                    "text": "Nach erfolgreicher Ermittlung stehen GroupID und (verschlüsselt gespeicherter) GroupKey unten im Tab „Erweitert\". Speichern nicht vergessen.",
+                    "text": "Once retrieved, GroupID and encrypted GroupKey appear on the 'Advanced' tab. Don't forget to save.",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -226,22 +226,22 @@
         },
         "tabDevices": {
             "type": "panel",
-            "label": "Geräte",
+            "label": "Appliances",
             "items": {
                 "autoDiscover": {
                     "type": "checkbox",
-                    "label": "Geräte automatisch per mDNS finden",
+                    "label": "Find devices automatically via mDNS",
                     "newLine": true,
                     "xs": 12,
                     "sm": 6,
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Findet Geräte per mDNS im selben Netz. Im Docker-Bridge-Netz kommt Multicast nicht durch – dann die IP-Adressen unten von Hand eintragen."
+                    "help": "Finds appliances via mDNS on the same network. Multicast does not pass through a Docker bridge network – then enter the IP addresses below by hand."
                 },
                 "autoDiscoverInterval": {
                     "type": "number",
-                    "label": "Hintergrund-Suche Intervall in Minuten",
+                    "label": "Background discovery interval in minutes",
                     "min": 1,
                     "max": 120,
                     "default": 10,
@@ -254,7 +254,7 @@
                 },
                 "discoverNow": {
                     "type": "sendTo",
-                    "label": "Jetzt suchen",
+                    "label": "Search now",
                     "command": "discover",
                     "variant": "outlined",
                     "xs": 12,
@@ -265,8 +265,8 @@
                 },
                 "ipFallbackScan": {
                     "type": "checkbox",
-                    "label": "Bei Ausfall die neue IP im Subnetz suchen",
-                    "help": "Antwortet ein manuell eingetragenes Gerät nicht mehr, wird das eigene /24-Netz einmal abgeklopft (höchstens alle 30 Minuten). Nötig, wenn die Geräte ihre IP per DHCP bekommen und mDNS nicht durchkommt – etwa im Docker-Bridge-Netz.",
+                    "label": "Search the subnet for the new IP if a device drops out",
+                    "help": "If a manually entered device stops answering, the adapter probes its own /24 network once (at most every 30 minutes). Needed when the appliances get their IP via DHCP and mDNS does not get through - for instance inside a Docker bridge network.",
                     "default": true,
                     "newLine": true,
                     "xs": 12,
@@ -277,13 +277,13 @@
                 },
                 "devices": {
                     "type": "table",
-                    "label": "Manuelle Geräte-IPs (optional, zusätzlich)",
+                    "label": "Manual device IPs (optional, additional)",
                     "newLine": true,
                     "items": [
                         {
                             "type": "text",
                             "attr": "ip",
-                            "title": "IP-Adresse",
+                            "title": "IP address",
                             "width": "100%"
                         }
                     ],
@@ -292,17 +292,17 @@
                     "md": 12,
                     "lg": 12,
                     "xl": 12,
-                    "help": "Für Geräte, welche die Suche nicht findet, und immer dann, wenn kein Multicast durchkommt. Eine Zeile je Gerät."
+                    "help": "For appliances the scan does not find, and whenever multicast does not get through. One row per appliance."
                 }
             }
         },
         "tabValues": {
             "type": "panel",
-            "label": "Abfrage & Werte",
+            "label": "Polling & values",
             "items": {
                 "pollInterval": {
                     "type": "number",
-                    "label": "Abfrageintervall (Ruhe) in Sekunden",
+                    "label": "Poll interval (idle) in seconds",
                     "newLine": true,
                     "default": 30,
                     "min": 5,
@@ -312,11 +312,11 @@
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Wie oft der Adapter fragt, solange kein Programm läuft."
+                    "help": "How often the adapter polls while no programme is running."
                 },
                 "activePollInterval": {
                     "type": "number",
-                    "label": "Abfrageintervall (aktiv) in Sekunden",
+                    "label": "Poll interval (active) in seconds",
                     "default": 30,
                     "min": 5,
                     "max": 600,
@@ -325,33 +325,33 @@
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Wie oft der Adapter während eines laufenden Programms fragt."
+                    "help": "How often the adapter polls while a programme is running."
                 },
                 "germanNames": {
                     "type": "checkbox",
-                    "label": "Datenpunkt-Namen auf Deutsch",
+                    "label": "State names in German",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "help": "Legt die Datenpunkt-Namen zweisprachig an; der Admin zeigt sie dann auf Deutsch. Wirkt nach dem Speichern und Neustart."
+                    "help": "Creates the state names bilingually; the admin then shows them in German. Takes effect after saving and restarting."
                 },
                 "secondsTime": {
                     "type": "checkbox",
-                    "label": "Sekundengenaue Rest-/Laufzeit abrufen (DOP2)",
+                    "label": "Fetch second-precise remaining/elapsed time (DOP2)",
                     "newLine": true,
                     "xs": 12,
                     "sm": 6,
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Liest Rest- und Laufzeit sekundengenau per DOP2 statt nur in Minuten."
+                    "help": "Reads remaining and elapsed time to the second via DOP2 instead of only in minutes."
                 },
                 "secondsInterval": {
                     "type": "number",
-                    "label": "Sekunden-Abfrageintervall in Sekunden",
+                    "label": "Second polling interval in seconds",
                     "min": 10,
                     "max": 3600,
                     "default": 30,
@@ -364,18 +364,18 @@
                 },
                 "ecoFeedback": {
                     "type": "checkbox",
-                    "label": "EcoFeedback (Energie/Wasser) abrufen",
+                    "label": "Fetch EcoFeedback (energy/water)",
                     "newLine": true,
                     "xs": 12,
                     "sm": 6,
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Liest Energie und Wasser per DOP2. Nur Geräte, die das liefern – bisher Waschmaschinen."
+                    "help": "Reads energy and water via DOP2. Only appliances that provide it – so far washing machines."
                 },
                 "ecoInterval": {
                     "type": "number",
-                    "label": "EcoFeedback-Intervall in Sekunden",
+                    "label": "EcoFeedback interval in seconds",
                     "min": 15,
                     "max": 3600,
                     "hidden": "!data.ecoFeedback",
@@ -385,21 +385,21 @@
                     "lg": 4,
                     "xl": 4
                 },
-                "zaehler": {
+                "energyMeters": {
                     "type": "table",
-                    "label": "Energiezähler je Gerät (optional)",
+                    "label": "Energy meter per appliance (optional)",
                     "newLine": true,
                     "items": [
                         {
                             "type": "text",
                             "attr": "serial",
-                            "title": "Seriennummer des Geräts",
+                            "title": "Appliance serial number",
                             "width": "40%"
                         },
                         {
                             "type": "objectId",
-                            "attr": "datenpunkt",
-                            "title": "Zähler-Datenpunkt (Wh, laufend steigend)",
+                            "attr": "stateId",
+                            "title": "Meter datapoint (Wh, monotonically increasing)",
                             "width": "60%"
                         }
                     ],
@@ -408,42 +408,39 @@
                     "md": 12,
                     "lg": 12,
                     "xl": 12,
-                    "help": "Der vom Gerät gemeldete Verbrauch ist eine Erwartung, keine Messung. Wer eine Messsteckdose davor hat, trägt hier deren Zähler-Datenpunkt ein."
+                    "help": "The consumption reported by the appliance is an estimate, not a measurement. If you have a metering plug in front of it, enter its meter state here."
                 },
-                "leafDatenpunkte": {
+                "leafStates": {
                     "type": "checkbox",
                     "newLine": true,
-                    "label": {
-                        "de": "Anlegen, was das Gerät liefert",
-                        "en": "Create what the device delivers"
-                    },
+                    "label": "Create what the device delivers",
                     "xs": 12,
                     "sm": 6,
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Legt die geräteinternen Werte als Datenpunkte an – Heizrelais, Wasserstand, Drehzahl und mehr. Die Feldnamen stammen aus öffentlichen Projekten und sind nicht geprüft."
+                    "help": "Creates the appliance's internal values as states – heating relay, water level, drum speed and more. The field names come from public projects and are unverified."
                 }
             }
         },
         "tabPush": {
             "type": "panel",
-            "label": "Push & Ports",
+            "label": "Push & ports",
             "items": {
                 "usePush": {
                     "type": "checkbox",
-                    "label": "SuperVision-Push aktivieren (experimentell, Echtzeit)",
+                    "label": "Enable SuperVision push (experimental, real-time)",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "help": "Geräte melden Änderungen sofort, statt abgefragt zu werden. Nicht jedes Modul kann das: ältere XKM nehmen die Anmeldung an, senden aber nichts."
+                    "help": "Appliances report changes immediately instead of being polled. Not every module can do this: older XKM accept the subscription but send nothing."
                 },
                 "pushPort": {
                     "type": "number",
-                    "label": "Eingehender Push-Port (TCP)",
+                    "label": "Inbound push port (TCP)",
                     "min": 1024,
                     "max": 65535,
                     "hidden": "!data.usePush",
@@ -452,46 +449,46 @@
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Muss aus dem Gerätenetz eingehend erreichbar sein. Im Docker-Container zuverlässig nur mit network_mode: host."
+                    "help": "Must be reachable inbound from the appliance network. In a Docker container this reliably works only with network_mode: host."
                 }
             }
         },
         "tabControl": {
             "type": "panel",
-            "label": "Steuerung",
+            "label": "Control",
             "items": {
                 "allowControl": {
                     "type": "checkbox",
-                    "label": "Steuerung (Schreibbefehle) aktivieren",
+                    "label": "Enable control (write commands)",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "help": "Legt beschreibbare Datenpunkte an. Befehle wirken nur, wenn am Gerät MobileStart freigegeben ist; manche Firmwares lehnen sie grundsätzlich ab."
+                    "help": "Creates writable states. Commands only take effect while MobileStart is enabled on the appliance; some firmwares reject them outright."
                 }
             }
         },
         "tabHistory": {
             "type": "panel",
-            "label": "Verlauf",
+            "label": "History",
             "items": {
                 "cycleHistory": {
                     "type": "checkbox",
-                    "label": "Programme mitschreiben",
+                    "label": "Record cycles",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Schreibt jedes abgeschlossene Programm mit. Die Geräte heben nichts auf – der Verlauf beginnt mit dem Einschalten und lässt sich nicht rückwirkend füllen."
+                    "help": "Records every completed programme. The appliances keep nothing – the history starts when you switch this on and cannot be filled retroactively."
                 },
                 "cycleRingSize": {
                     "type": "number",
-                    "label": "Einträge im Ringpuffer",
-                    "help": "Wie viele der letzten Programme in cyclesJson stehen. Für die Schnellanzeige gedacht; Langzeitdaten kommen aus dem History-Adapter.",
+                    "label": "Entries in the ring buffer",
+                    "help": "How many recent cycles are kept in cyclesJson. Meant for quick display; long-term data comes from the history adapter.",
                     "min": 1,
                     "max": 1000,
                     "default": 50,
@@ -504,8 +501,8 @@
                 },
                 "historyDays": {
                     "type": "number",
-                    "label": "Aufbewahrung in Tagen",
-                    "help": "Ältere Einträge fallen aus dem Ringpuffer. 730 Tage sind zwei Jahre.",
+                    "label": "Retention in days",
+                    "help": "Older entries drop out of the ring buffer. 730 days is two years.",
                     "min": 1,
                     "max": 3650,
                     "default": 730,
@@ -518,8 +515,8 @@
                 },
                 "historyWrite": {
                     "type": "checkbox",
-                    "label": "Zusätzlich in den History-Adapter schreiben",
-                    "help": "Energie, Wasser und Dauer je Programm mit dem Zeitpunkt des Programmendes – damit lassen sich Diagramme über beliebige Zeiträume bauen.",
+                    "label": "Also write to the history adapter",
+                    "help": "Energy, water and duration per cycle, timestamped at the end of the cycle – so charts can cover any period.",
                     "newLine": true,
                     "hidden": "!data.cycleHistory",
                     "xs": 12,
@@ -531,7 +528,7 @@
                 "historyInstance": {
                     "type": "instance",
                     "adapter": "history",
-                    "label": "History-Instanz",
+                    "label": "History instance",
                     "allowDeactivate": false,
                     "default": "history.0",
                     "hidden": "!data.cycleHistory || !data.historyWrite",
@@ -543,20 +540,14 @@
                 }
             }
         },
-        "tabDiagnose": {
+        "tabDiagnostics": {
             "type": "panel",
-            "label": {
-                "de": "Diagnose",
-                "en": "Diagnostics"
-            },
+            "label": "Diagnostics",
             "items": {
-                "_diagIntro": {
+                "_diagnosticsIntro": {
                     "type": "staticText",
                     "newLine": true,
-                    "text": {
-                        "de": "Hier stehen die Einstellungen, die der Fehlersuche und der Feldzuordnung dienen. Für den täglichen Betrieb werden sie nicht gebraucht; alles hier ist ab Werk aus. Die gesammelten Daten bleiben in dieser Instanz.",
-                        "en": "These settings serve troubleshooting and field mapping. They are not needed for daily operation and are off by default. Collected data stays in this instance."
-                    },
+                    "text": "These settings serve troubleshooting and field mapping. They are not needed for daily operation and are off by default. Collected data stays in this instance.",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -565,7 +556,7 @@
                 },
                 "ecoRawFields": {
                     "type": "checkbox",
-                    "label": "Rohfelder mitschreiben (nur zur Fehlersuche)",
+                    "label": "Record raw fields (diagnostics only)",
                     "newLine": true,
                     "hidden": "!data.ecoFeedback",
                     "xs": 12,
@@ -573,9 +564,9 @@
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Schreibt alle Felder des Eco-Leaf nach eco.felderJson statt nur der zwei ausgewerteten. Hilft, wenn Energie oder Wasser bei Ihrem Modell falsch ankommen."
+                    "help": "Writes all fields of the eco leaf to eco.fieldsJson instead of only the two evaluated ones. Helps when energy or water arrive wrong on your model."
                 },
-                "_sammlerKopf": {
+                "_collectorHeader": {
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -584,12 +575,9 @@
                     "type": "header",
                     "size": 4,
                     "newLine": true,
-                    "text": {
-                        "de": "Datensammlung für andere Modelle",
-                        "en": "Data collection for other models"
-                    }
+                    "text": "Data collection for other models"
                 },
-                "sammlerAktiv": {
+                "collectorActive": {
                     "xs": 12,
                     "sm": 6,
                     "md": 4,
@@ -597,11 +585,8 @@
                     "xl": 4,
                     "type": "checkbox",
                     "newLine": true,
-                    "label": {
-                        "de": "Datensätze sammeln",
-                        "en": "Collect datasets"
-                    },
-                    "help": "Schreibt je Programm einen Datensatz mit Modell, Programm und allen Rohfeldern. Aus Cloud-Werten oder eigenen Eingaben ermittelt der Adapter daraus die Feldzuordnung."
+                    "label": "Collect datasets",
+                    "help": "Records one dataset per programme with model, programme and all raw fields. From cloud values or your own entries the adapter derives the field mapping."
                 },
                 "leafScanAuto": {
                     "xs": 12,
@@ -611,16 +596,10 @@
                     "xl": 4,
                     "type": "checkbox",
                     "newLine": true,
-                    "label": {
-                        "de": "Leaf-Suche selbst starten, wenn ein Gerät eingeschaltet wird",
-                        "en": "Start the leaf search when a device is switched on"
-                    },
-                    "help": {
-                        "de": "Nur bei Geräten, deren Suche noch nie gelaufen ist. Ein Gerät, das meistens aus ist, wird sonst nie durchsucht. Die Suche liest ausschließlich und hält an, sobald das Gerät wieder aus ist.",
-                        "en": "Only for devices whose search has never run. A device that is off most of the time would otherwise never be searched. The search only reads, and stops as soon as the device is off again."
-                    }
+                    "label": "Start the leaf search when a device is switched on",
+                    "help": "Only for devices whose search has never run. A device that is off most of the time would otherwise never be searched. The search only reads, and stops as soon as the device is off again."
                 },
-                "sammlerCloud": {
+                "collectorCloud": {
                     "xs": 12,
                     "sm": 6,
                     "md": 4,
@@ -628,17 +607,11 @@
                     "xl": 4,
                     "type": "checkbox",
                     "newLine": true,
-                    "hidden": "!data.sammlerAktiv",
-                    "label": {
-                        "de": "Cloud-Werte als Vergleich mitschreiben",
-                        "en": "Include cloud values for comparison"
-                    },
-                    "help": {
-                        "de": "Braucht eine laufende Instanz des Adapters mielecloudservice.",
-                        "en": "Requires a running instance of the mielecloudservice adapter."
-                    }
+                    "hidden": "!data.collectorActive",
+                    "label": "Include cloud values for comparison",
+                    "help": "Requires a running instance of the mielecloudservice adapter."
                 },
-                "sammlerCloudInstanz": {
+                "collectorCloudInstance": {
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
@@ -646,15 +619,12 @@
                     "xl": 6,
                     "type": "text",
                     "newLine": true,
-                    "hidden": "!data.sammlerCloud",
-                    "label": {
-                        "de": "Instanz des Cloud-Adapters",
-                        "en": "Cloud adapter instance"
-                    },
+                    "hidden": "!data.collectorCloud",
+                    "label": "Cloud adapter instance",
                     "default": "mielecloudservice.0",
-                    "help": "Instanz des Cloud-Adapters, aus der die Vergleichswerte kommen, zum Beispiel mielecloudservice.0."
+                    "help": "Instance of the cloud adapter the reference values come from, for example mielecloudservice.0."
                 },
-                "_sammlerHand": {
+                "_collectorManual": {
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -662,20 +632,14 @@
                     "xl": 12,
                     "type": "staticText",
                     "newLine": true,
-                    "hidden": "!data.sammlerAktiv",
-                    "text": {
-                        "de": "Ohne Cloud: Nach jedem Programm Energie und Wasser aus der Miele-App in die Punkte \"collection.inputEnergy\" und \"collection.inputWater\" eintragen - sie gehören dann zum zuletzt gesammelten Datensatz. Wie viele noch fehlen, steht in \"collection.progress\".",
-                        "en": "Without cloud: after each programme, enter energy and water from the Miele app into \"collection.inputEnergy\" and \"collection.inputWater\" - they are attached to the most recent dataset. \"collection.progress\" shows what is still missing."
-                    }
+                    "hidden": "!data.collectorActive",
+                    "text": "Without cloud: after each programme, enter energy and water from the Miele app into \"collection.inputEnergy\" and \"collection.inputWater\" - they are attached to the most recent dataset. \"collection.progress\" shows what is still missing."
                 },
-                "_csvKopf": {
+                "_csvHeader": {
                     "type": "header",
                     "size": 4,
                     "newLine": true,
-                    "text": {
-                        "de": "Gesammelte Daten ausgeben",
-                        "en": "Export collected data"
-                    },
+                    "text": "Export collected data",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
@@ -687,21 +651,18 @@
                     "command": "csvExport",
                     "openUrl": true,
                     "newLine": true,
-                    "label": {
-                        "de": "CSV erzeugen und öffnen",
-                        "en": "Create and open CSV"
-                    },
+                    "label": "Create and open CSV",
                     "variant": "contained",
                     "xs": 12,
                     "sm": 6,
                     "md": 4,
                     "lg": 4,
                     "xl": 4,
-                    "help": "Legt zwei Tabellen ab und öffnet die erste: eine Zeile je Programm mit allen Rohfeldern, dazu eine Auswertung mit einer Zeile je Feld. Achtung beim Weitergeben – die Tabelle enthält die Zeitpunkte der Programme."
+                    "help": "Writes two tables and opens the first: one row per programme with all raw fields, plus an analysis with one row per field. Take care when sharing – the table contains the programme timestamps."
                 },
                 "ecoEnergyIdx": {
                     "type": "number",
-                    "label": "Feldindex Energie",
+                    "label": "Energy field index",
                     "min": 1,
                     "max": 200,
                     "default": 25,
@@ -712,11 +673,11 @@
                     "md": 3,
                     "lg": 2,
                     "xl": 2,
-                    "help": "Nummer des Feldes im Eco-Leaf, das die Energie trägt. Die Vorgabe passt zur WCR860; bei anderen Modellen über die Datensammlung ermitteln."
+                    "help": "Number of the field in the eco leaf that carries the energy. The default fits the WCR860; on other models determine it via the data collection."
                 },
                 "ecoWaterIdx": {
                     "type": "number",
-                    "label": "Feldindex Wasser",
+                    "label": "Water field index",
                     "min": 1,
                     "max": 200,
                     "default": 21,
@@ -726,12 +687,12 @@
                     "md": 3,
                     "lg": 2,
                     "xl": 2,
-                    "help": "Nummer des Feldes im Eco-Leaf, das die Wassermenge trägt. Die Vorgabe passt zur WCR860; bei anderen Modellen über die Datensammlung ermitteln."
+                    "help": "Number of the field in the eco leaf that carries the water volume. The default fits the WCR860; on other models determine it via the data collection."
                 },
                 "ecoWaterDiv": {
                     "type": "number",
-                    "label": "Teilungsfaktor Wasserfeld",
-                    "help": "Rohwert ÷ Teilungsfaktor = Liter",
+                    "label": "Water field divisor",
+                    "help": "Raw value ÷ divisor = litres",
                     "min": 1,
                     "max": 100000,
                     "step": 0.01,
@@ -747,29 +708,29 @@
         },
         "tabAdvanced": {
             "type": "panel",
-            "label": "Erweitert",
+            "label": "Advanced",
             "items": {
                 "groupId": {
                     "type": "text",
-                    "label": "GroupID (16 Hex-Zeichen)",
+                    "label": "GroupID (16 hex chars)",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "help": "Wird normalerweise über die Anmeldung gesetzt. Von Hand nur, wenn GroupID und GroupKey bereits bekannt sind."
+                    "help": "Normally set through the login. Enter by hand only if GroupID and GroupKey are already known."
                 },
                 "groupKey": {
                     "type": "password",
-                    "label": "GroupKey (128 Hex-Zeichen)",
+                    "label": "GroupKey (128 hex chars)",
                     "visible": true,
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
                     "xl": 6,
-                    "help": "Wird verschlüsselt gespeichert und nie im Klartext angezeigt."
+                    "help": "Stored encrypted and never shown in clear text."
                 }
             }
         }

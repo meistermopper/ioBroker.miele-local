@@ -24,7 +24,7 @@ function ok(name, fn) {
 console.log('MieleCrypto-Tests:');
 
 ok('GroupKey-Länge validiert', () => {
-    assert.throws(() => new MieleCrypto(GROUP_ID, 'AA'), /64 Byte/);
+    assert.throws(() => new MieleCrypto(GROUP_ID, 'AA'), /64 bytes/);
 });
 
 const mc = new MieleCrypto(GROUP_ID, GROUP_KEY);

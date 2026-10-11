@@ -91,7 +91,7 @@ wird damit an den meisten Stellen entbehrlich.
 ### `eco` – Energie und Wasser
 
 `eco.energy` (kWh), `eco.energyWh` (Wh), `eco.water` (l), soweit das Gerät sie liefert, dazu
-`eco.quelle` mit der Herkunft des Werts. Gelesen wird über DOP2; bislang liefern das
+`eco.source` mit der Herkunft des Werts. Gelesen wird über DOP2; bislang liefern das
 Waschmaschinen. **Der vom Gerät gemeldete Wert ist seine eigene Erwartung, keine Messung.** Wer
 eine echte Zahl will, trägt im Reiter **Abfrage & Werte** den Zähler-Datenpunkt einer
 Messsteckdose ein – dann schreibt der Adapter mit, was ein Programm wirklich gezogen hat.
@@ -176,29 +176,29 @@ Alles in diesem Abschnitt ist **ab Werk aus** und wird im täglichen Betrieb nic
 dient einer einzigen Frage: Welches Rohfeld *dieses* Geräts trägt Energie und Wasser? Die
 Feldnummern sind je Baureihe verschieden, und die Vorgaben im Adapter stammen von einer WCR860.
 
-**Rohfelder.** Schreibt alle Felder des Eco-Leaf nach `eco.felderJson` statt nur der zwei
+**Rohfelder.** Schreibt alle Felder des Eco-Leaf nach `eco.fieldsJson` statt nur der zwei
 ausgewerteten.
 
 **Datensammlung.** Legt je abgeschlossenem Programm einen Datensatz an – Modell, Programm, alle
 Rohfelder und am Ende den Schlussstand jedes antwortenden Leafs. Damit daraus eine Zuordnung
 wird, braucht der Adapter einen Vergleichswert: entweder aus einem Cloud-Adapter oder nach jedem
-Programm von Hand in `sammlung.eingabeEnergie` und `sammlung.eingabeWasser` eingetragen. In
-`sammlung.fortschritt` steht, was noch fehlt; in `sammlung.befund` das Ergebnis: welches Feld
+Programm von Hand in `collection.inputEnergy` und `collection.inputWater` eingetragen. In
+`collection.progress` steht, was noch fehlt; in `collection.finding` das Ergebnis: welches Feld
 passt, mit welchem Teiler und wie genau.
 
 **Leaf-Suche.** DOP2 adressiert Daten als `Unit/Attribut`, und nur eine Handvoll dieser Adressen
 ist überhaupt irgendwo dokumentiert. Die Suche arbeitet den Adressraum schonend genug ab, um das
-Modul nicht zu überlasten; in `sammlung.leafScanJson` sammelt sich, was geantwortet hat. Mit
-`sammlung.leafVerlaufFein` lässt sich ein einzelnes Leaf während eines laufenden Programms
+Modul nicht zu überlasten; in `collection.scanJson` sammelt sich, was geantwortet hat. Mit
+`collection.trendLeaf` lässt sich ein einzelnes Leaf während eines laufenden Programms
 engmaschig mitschreiben – das Feld, dessen Wert mit dem Verbrauch mitwächst, ist das gesuchte.
 
 **CSV-Ausdruck.** Der Knopf im Diagnose-Reiter legt zwei Tabellen im Dateibereich der Instanz ab
 und öffnet die erste:
 
-- `sammlung-<Datum>.csv` – eine Zeile je Programm: Zeiten, Programm, die Vergleichswerte, jedes
+- `collection-<Datum>.csv` – eine Zeile je Programm: Zeiten, Programm, die Vergleichswerte, jedes
   Rohfeld in einer eigenen Spalte, und je Leaf-Feld der Stand bei Beginn, bei Ende und die
   Differenz dazwischen. Bei Lebenszählern sagt allein die Differenz etwas aus.
-- `befund-<Datum>.csv` – eine Zeile je Feld: Übereinstimmung mit dem Vergleichswert, bester
+- `finding-<Datum>.csv` – eine Zeile je Feld: Übereinstimmung mit dem Vergleichswert, bester
   Teiler, mittlere und größte Abweichung. Das ist die Antwort, wegen der die Sammlung läuft.
 
 Semikolon als Trennzeichen, Komma als Dezimalzeichen, BOM – ein Doppelklick öffnet sie in der
@@ -244,6 +244,18 @@ Reverse-Engineering-Arbeit der Projekte `MieleRESTServer` (akappner),
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### 0.3.46
+- Nur das laufende Gerät wird im kurzen Takt abgefragt („Abfrageintervall (aktiv)“), Geräte in Ruhe behalten den Ruhetakt. Bisher wurden alle Geräte im kurzen Takt abgefragt, sobald eines lief – weniger Anfragen an die Miele-Module, die nur eine Verbindung gleichzeitig bedienen.
+
+### 0.3.45
+- Die letzte deutsche Datenpunkt-ID ist weg: `eco.quelle` heißt jetzt `eco.source`, der Wert ist immer englisch. Vorhandene Installationen ziehen beim Start um.
+- `statusText`, `programText`, `programPhaseText`, `programTypeText` und `dryingStepText` folgen der Option „Deutsche Namen“ - ist sie aus, sind die Texte englisch (bisher immer deutsch).
+- Restliche deutsche Log- und Fehlermeldungen übersetzt; die CSV-Dateien heißen `collection-<Datum>.csv` und `finding-<Datum>.csv`.
+- Alle JSDoc-Kommentare vollständig (keine Lint-Warnungen mehr); `@iobroker/testing` 6.3.0.
+- `eco.felderJson` heißt jetzt `eco.fieldsJson` (Umzug beim Start).
+- Einstellungen tragen englische Namen: aus `sammlerAktiv`/`sammlerCloud`/`sammlerCloudInstanz` wurden `collectorActive`/`collectorCloud`/`collectorCloudInstance`, aus `leafDatenpunkte` wurde `leafStates`, aus der Zählertabelle `zaehler` wurde `energyMeters`. Vorhandene Einstellungen werden beim Start einmalig übernommen (Review 03.10.2026).
+- Hintergrundschleifen (Eco, Betriebsstunden, Sekunden, Suche, Push-Erneuerung, Leaf-Verlauf) planen den nächsten Lauf erst nach dem Ende des vorigen – keine überlappenden Läufe mehr, wenn ein Gerät langsam antwortet.
 
 ### 0.3.38
 - **Die Objekt-IDs sind jetzt durchgängig englisch.** Der Diagnosekanal hieß `sammlung` und
@@ -321,7 +333,7 @@ Reverse-Engineering-Arbeit der Projekte `MieleRESTServer` (akappner),
 - **Wasser: das EcoFeedback des Geräts hat Vorrang.** Wo es DOP2 2/1585 gibt, gilt dessen Wert für
   das letzte Programm; nur wo es ihn nicht gibt, zählt der Adapter weiter die Impulse des
   Durchflusszählers (Feld 21 / 200, über 24 Programme gegen den Hauswasserzähler belegt). Der neue
-  Datenpunkt `eco.quelle` sagt, aus welcher der beiden Quellen ein Wert stammt.
+  Datenpunkt `eco.source` (bis 0.3.44 `eco.quelle`) sagt, aus welcher der beiden Quellen ein Wert stammt.
 - **Der Datensammler schreibt alle Leafs mit.** Am Programmende liest der Adapter jedes
   antwortende Leaf einmal, schonend (fünf Sekunden zwischen zwei Anfragen, im Hintergrund) und
   hängt den Schlussstand an den Datensatz. Erst das macht die Sammlung für Geräte brauchbar, die

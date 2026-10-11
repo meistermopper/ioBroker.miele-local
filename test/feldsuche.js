@@ -42,19 +42,19 @@ describe('Feldsuche: Wasser', () => {
         const vierzig = fs.felderBewerten(saetze, 'waterL').find(b => b.index === '40');
         expect(vierzig.taugt).to.be.false;
         expect(vierzig.konstant).to.be.true;
-        expect(vierzig.grund).to.match(/konstant/);
+        expect(vierzig.grund).to.match(/stays at/);
     });
 
     it('nennt das eingestellte Feld, wenn es ein anderes ist als das gefundene', () => {
         const text = fs.befund(saetze, { wasser: 40 });
-        expect(text).to.match(/Feld 26/);
-        expect(text).to.match(/eingestellt ist aber Feld 40/);
+        expect(text).to.match(/field 26/);
+        expect(text).to.match(/but field 40/);
     });
 
     it('haelt still, solange zu wenige Zyklen vorliegen', () => {
         // Zwei Zyklen koennen zufaellig zu jedem Feld passen - dazu sagt die Suche nichts.
         const text = fs.befund(saetze.slice(0, 2), {});
-        expect(text).to.match(/mindestens 3/);
+        expect(text).to.match(/at least 3/);
         expect(fs.felderBewerten(saetze.slice(0, 2), 'waterL')).to.be.empty;
     });
 });
@@ -89,7 +89,7 @@ describe('Feldsuche: Energie', () => {
         // die Suche nichts vorschlagen - eine erfundene Zuordnung waere schlimmer als keine.
         const ohne = saetze.map(s => zyklus({ 25: s.felder['25'] }, s.cloud));
         const text = fs.befund(ohne, {});
-        expect(text).to.match(/kein Feld passt/);
+        expect(text).to.match(/no field matches/);
     });
 });
 
@@ -122,7 +122,7 @@ describe('Feldsuche: Vergleichsquellen', () => {
 describe('Feldsuche: Robustheit', () => {
     it('verkraftet eine leere Sammlung', () => {
         expect(fs.felderBewerten([], 'waterL')).to.be.empty;
-        expect(fs.befund([], {})).to.match(/0 Zyklen/);
+        expect(fs.befund([], {})).to.match(/0 cycles/);
     });
 
     it('verkraftet Datensaetze ohne Felder', () => {
@@ -207,7 +207,7 @@ describe('Feldsuche: Nullwerte', () => {
         ];
         const b = fs.felderBewerten(meistLeer, 'waterL')[0];
         expect(b.taugt).to.be.false;
-        expect(b.grund).to.match(/auf 0/);
+        expect(b.grund).to.match(/is 0 in/);
     });
 });
 
@@ -268,9 +268,9 @@ describe('Feldsuche: Warnung im Befund', () => {
             zyklus({ 25: 770, 26: 1372 }, { energyKwh: 1.1, waterL: 81 }),
         ];
         const text = fs.befund(echt, { energie: 25, wasser: 26 });
-        expect(text).to.match(/Achtung/);
-        expect(text).to.match(/Feld 26 steht in festem Verhaeltnis zu Feld 25/);
-        expect(text).to.match(/keine eigene Messung/);
+        expect(text).to.match(/Warning/);
+        expect(text).to.match(/field 26 configured for water is in a fixed ratio to field 25/);
+        expect(text).to.match(/no measurement of its own/);
     });
 
     it('warnt nicht, wo die Felder unabhaengig sind', () => {
@@ -279,7 +279,7 @@ describe('Feldsuche: Warnung im Befund', () => {
             zyklus({ 1: 2000, 2: 970 }, { energyKwh: 2, waterL: 97 }),
             zyklus({ 1: 1100, 2: 810 }, { energyKwh: 1.1, waterL: 81 }),
         ];
-        expect(fs.befund(frei, { energie: 1, wasser: 2 })).to.not.match(/Achtung/);
+        expect(fs.befund(frei, { energie: 1, wasser: 2 })).to.not.match(/Warning/);
     });
 });
 
@@ -317,8 +317,8 @@ describe('Feldsuche: krumme Teiler', () => {
 
     it('nennt den Fund im Befund', () => {
         const text = fs.befund(echt, { wasser: 26 });
-        expect(text).to.match(/Feld 21/);
-        expect(text).to.match(/eingestellt ist aber Feld 26/);
+        expect(text).to.match(/field 21/);
+        expect(text).to.match(/but field 26/);
     });
 
     it('bevorzugt weiter den glatten Teiler, wo er passt', () => {
