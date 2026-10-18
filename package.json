@@ -47,8 +47,9 @@
     "test:integration": "mocha test/integration --exit",
     "test:local": "npm run lint && npm test",
     "test:unit": "mocha \"test/!(integration|package|test-crypto).js\" --exit",
-    "dev": "dev-server watch",
-    "release": "release-script"
+    "dev": "node scripts/patch-ps-tree.js && dev-server watch",
+    "release": "release-script",
+    "update:dev": "node scripts/patch-ps-tree.js && dev-server update"
   },
   "files": [
     "admin/",
