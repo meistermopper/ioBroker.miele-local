@@ -11,7 +11,8 @@ const utils = require('@iobroker/adapter-core');
 const paket = require('./package.json');
 const { MieleCrypto } = require('./lib/crypto');
 const { MieleDeviceApi } = require('./lib/api');
-const { discover, scanSubnet, istMiele } = require('./lib/discovery');
+const { discover, scanSubnet, istMiele, subnetzVorlagen } = require('./lib/discovery');
+const befehle = require('./lib/befehle');
 const takt = require('./lib/takt');
 const cloud = require('./lib/cloud');
 const objdef = require('./lib/objects');
@@ -337,11 +338,22 @@ class MieleLocal extends utils.Adapter {
         }
 
         // Periodisches Re-Discovery im Hintergrund (z. B. für Geräte, die aus dem Standby aufwachen)
-        if (this.config.autoDiscover !== false) {
+        /*
+         * Auch ohne mDNS, sobald IPs von Hand eingetragen sind und der IP-Rueckfall an ist.
+         *
+         * Bis 0.3.46 hing die ganze Hintergrundsuche an autoDiscover. Genau dort, wo der
+         * Rueckfall gebraucht wird - Docker-Bridge, mDNS aus, IPs von Hand -, lief er deshalb
+         * nur ein einziges Mal beim Start. Ein Geraet, das danach die Adresse wechselte oder
+         * beim Start nicht erreichbar war, kam bis zum naechsten Neustart nicht zurueck.
+         */
+        const handIps = (this.config.devices || []).some(e => (typeof e === 'string' ? e : e && e.ip));
+        if (this.config.autoDiscover !== false || (this.config.ipFallbackScan !== false && handIps)) {
             const discInterval = MieleLocal.intervallMs(this.config.autoDiscoverInterval, 10, 1, 60000);
             this.schleife('discoveryTimer', () => this.discoverDevices(), discInterval);
         }
 
+        // Erst Altlasten schliessen, dann abonnieren - siehe lib/befehle.js offeneSchliessen().
+        await befehle.offeneSchliessen(this);
         await this.subscribeStatesAsync('*.control.*');
 
         // Push-Listener + Enrollment
@@ -459,17 +471,39 @@ class MieleLocal extends utils.Adapter {
          * und Statistik bleiben also dieselben, nur die Adresse ist neu.
          */
         if (this.config.ipFallbackScan !== false && konfigurierte.length) {
-            const erreichbar = await Promise.all(konfigurierte.map(ip => istMiele(ip, 1500)));
-            const vermisst = konfigurierte.filter((_, i) => !erreichbar[i]);
+            // Nur nachsehen, wo die Abfrage gerade scheitert oder noch nie geklappt hat - ein
+            // laufendes Geraet bekommt keine zusaetzliche Anfrage (das Modul bedient nur eine
+            // Verbindung gleichzeitig).
+            const kandidaten = konfigurierte.filter(ip => {
+                if (this.alteIps && this.alteIps.has(ip)) {
+                    return false; // Geraet laeuft schon unter seiner neuen Adresse
+                }
+                const d = Object.values(this.devices).find(x => x.ip === ip);
+                return !d || d.erreichbar === false;
+            });
+            const erreichbar = await Promise.all(kandidaten.map(ip => istMiele(ip, 1500)));
+            const vermisst = kandidaten.filter((_, i) => !erreichbar[i]);
             /*
-             * Hoechstens alle 30 Minuten.
+             * Hoechstens alle 30 Minuten (mit Verlaengerung, siehe unten).
              *
              * Ist ein Geraet schlicht ausgeschaltet - der Backofen ist es die meiste Zeit -,
              * bleibt es "vermisst", und ohne diese Sperre liefe bei jedem Discovery-Lauf ein
              * Subnetz-Scan, der nichts Neues findet.
              */
+            /*
+             * Findet ein Scan nichts Neues, verdoppelt sich die Pause bis auf vier Stunden.
+             *
+             * Ein Geraet, das nach einem WLAN-Ausfall einfach nicht zurueckkommt (Waschmaschine,
+             * 16.10.2026), wuerde sonst die ganze Nacht alle 30 Minuten 254 Adressen abklopfen
+             * und zwei Logzeilen schreiben. Sobald alle wieder antworten oder eine neue Adresse
+             * auftaucht, gilt wieder die kurze Pause.
+             */
+            const pauseMs = this.scanPauseMs || 30 * 60 * 1000;
+            if (!vermisst.length) {
+                this.scanPauseMs = 30 * 60 * 1000;
+            }
             const seitLetztem = Date.now() - (this.letzterScan || 0);
-            if (vermisst.length && seitLetztem < 30 * 60 * 1000) {
+            if (vermisst.length && seitLetztem < pauseMs) {
                 this.log.debug(
                     `${vermisst.length} device(s) not reachable, last subnet scan ` +
                         `${Math.round(seitLetztem / 60000)} min ago - waiting`,
@@ -480,13 +514,23 @@ class MieleLocal extends utils.Adapter {
                     `${vermisst.length} configured device(s) not responding ` +
                         `(${vermisst.join(', ')}) - searching the subnet for the new address`,
                 );
-                const imNetz = await scanSubnet(konfigurierte[0], m => this.log.info(m));
+                // Jedes Subnetz, in dem ein Geraet fehlt - nicht nur das der ersten Adresse.
+                const imNetz = [];
+                for (const vorlage of subnetzVorlagen(vermisst)) {
+                    imNetz.push(...(await scanSubnet(vorlage, m => this.log.info(m))));
+                }
+                let neue = 0;
                 for (const ip of imNetz) {
                     if (!seenIp.has(ip)) {
                         found.push({ ip, techType: '', deviceType: null });
                         seenIp.add(ip);
+                        neue++;
                         this.log.info(`New address found: ${ip}`);
                     }
+                }
+                this.scanPauseMs = neue ? 30 * 60 * 1000 : Math.min(4 * 60 * 60 * 1000, pauseMs * 2);
+                if (!neue) {
+                    this.log.info(`No new address found - next subnet search in ${this.scanPauseMs / 60000} min`);
                 }
             }
         }
@@ -496,7 +540,8 @@ class MieleLocal extends utils.Adapter {
         }
 
         for (const f of found) {
-            const alreadyKnown = Object.values(this.devices).some(d => d.ip === f.ip);
+            const alreadyKnown =
+                Object.values(this.devices).some(d => d.ip === f.ip) || (this.alteIps && this.alteIps.has(f.ip));
             if (!alreadyKnown) {
                 try {
                     await this.initDevice(f);
@@ -561,6 +606,15 @@ class MieleLocal extends utils.Adapter {
             // Vor allem anderen: was aus 0.3.37 noch unter deutschen IDs liegt, umziehen.
             await this.idsUmziehen(deviceId);
 
+            const vorher = this.devices[deviceId];
+            if (vorher && vorher.ip !== f.ip) {
+                // Gefunden ueber den IP-Rueckfall: dieselbe Seriennummer unter neuer Adresse.
+                this.alteIps = this.alteIps || new Set();
+                this.alteIps.add(vorher.ip);
+                this.log.info(
+                    `${deviceId}: now at ${f.ip} (was ${vorher.ip}) - please update the IP on the 'Appliances' tab`,
+                );
+            }
             this.devices[deviceId] = { ip: f.ip, route, deviceType, api, active: false };
             /*
              * Die Sammlungsobjekte schon beim Verbinden anlegen, nicht erst am Zyklusende.
@@ -889,6 +943,9 @@ class MieleLocal extends utils.Adapter {
         if ('Status' in state && !(await this.statusPlausibel(deviceId, state.Status))) {
             return;
         }
+        // Restzeit eines ausgeschalteten/fertigen Geraets ist ein Ueberbleibsel - siehe
+        // objects.restzeitBereinigen. Vor dem Dekodieren, damit auch das Programmende stimmt.
+        state = objdef.restzeitBereinigen(state);
         // Fuer die Einschalt-Erkennung: was stand vorher da?
         const statusVorher =
             'Status' in state ? ((await this.getStateAsync(`${deviceId}.state.status`)) || {}).val : null;
@@ -3249,6 +3306,26 @@ class MieleLocal extends utils.Adapter {
             if (fehler) {
                 await this.setStateAsync(`${deviceId}.info.connected`, { val: false, ack: true });
             }
+            /*
+             * Den Wechsel einmal melden, nicht jeden Fehlversuch.
+             *
+             * Bis 0.3.46 stand ein Ausfall nur im debug-Log - auf Stufe info sah man nichts,
+             * waehrend die Waschmaschine am 16.10.2026 nach einem WLAN-Ausfall stundenlang
+             * verschwunden blieb. Jede Abfrage einzeln auf info zu heben waere das Gegenteil:
+             * alle zwei Minuten dieselbe Zeile. Also: eine Zeile beim Wegfall, eine bei der
+             * Rueckkehr, dazwischen nur debug.
+             */
+            if (fehler && dev.erreichbar !== false) {
+                this.log.info(
+                    `${deviceId} (${dev.ip}) not reachable: ${fehler.message} - ` +
+                        `still trying every ${Math.round(this.abstandFuer(dev) / 1000)} s`,
+                );
+                dev.wegSeit = Date.now();
+            } else if (!fehler && dev.erreichbar === false) {
+                const min = dev.wegSeit ? Math.round((Date.now() - dev.wegSeit) / 60000) : null;
+                this.log.info(`${deviceId} (${dev.ip}) reachable again${min !== null ? ` after ${min} min` : ''}`);
+                dev.wegSeit = null;
+            }
             dev.erreichbar = !fehler;
             // Erst nach applyState: dev.active ist dann auf dem Stand dieser Abfrage.
             dev.naechsteAbfrage = Date.now() + this.abstandFuer(dev);
@@ -4207,52 +4284,28 @@ class MieleLocal extends utils.Adapter {
         if (idx < 0) {
             return;
         }
-        const deviceId = parts[idx - 1];
-        const sub = parts[idx + 1];
-        const dev = this.devices[deviceId];
-        if (!dev) {
-            return;
-        }
-        if (!this.config.allowControl) {
-            this.log.warn('Device control is disabled in instance settings.');
-            return;
-        }
-        if (!state.val) {
-            return;
-        } // nur bei true auslösen
-
-        const obj = await this.getObjectAsync(id);
-        const opcode = obj && obj.native ? obj.native.opcode : null;
-        if (opcode == null) {
-            return;
-        }
-
-        try {
-            const payload = buildUserRequest(opcode);
-            const status = await dev.api.put(
-                `Devices/${dev.route}/DOP2/${USER_REQ_UNIT}/${USER_REQ_LEAF}?idx1=0&idx2=0`,
-                payload,
-            );
-            if (status === 200 || status === 204) {
-                this.log.info(`Command '${sub}' sent to ${deviceId} (opcode 0x${opcode.toString(16)}).`);
-                await this.setStateAsync(id, { val: false, ack: true });
-                // Polling kurz pausieren, dann gezielt den neuen Zustand holen.
-                this.pausePollUntil = Date.now() + 2500;
-                if (this.pollTimer) {
-                    this.clearTimeout(this.pollTimer);
-                }
-                this.setTimeout(async () => {
-                    await this.pollAll();
-                    this.schedulePoll(false);
-                }, 2600);
-            } else {
-                this.log.warn(`Command '${sub}' to ${deviceId}: HTTP ${status} (is MobileStart enabled on device?).`);
-            }
-        } catch (e) {
-            this.log.warn(
-                `Command '${sub}' to ${deviceId} failed: ${e.message} (remote control might not be supported by firmware).`,
-            );
-        }
+        await befehle.verarbeiten(
+            this,
+            { id, deviceId: parts[idx - 1], sub: parts[idx + 1], val: state.val },
+            {
+                senden: (dev, opcode) =>
+                    dev.api.put(
+                        `Devices/${dev.route}/DOP2/${USER_REQ_UNIT}/${USER_REQ_LEAF}?idx1=0&idx2=0`,
+                        buildUserRequest(opcode),
+                    ),
+                nachErfolg: () => {
+                    // Polling kurz pausieren, dann gezielt den neuen Zustand holen.
+                    this.pausePollUntil = Date.now() + 2500;
+                    if (this.pollTimer) {
+                        this.clearTimeout(this.pollTimer);
+                    }
+                    this.setTimeout(async () => {
+                        await this.pollAll();
+                        this.schedulePoll(false);
+                    }, 2600);
+                },
+            },
+        );
     }
 
     startPush() {

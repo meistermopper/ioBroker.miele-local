@@ -245,6 +245,13 @@ Reverse-Engineering-Arbeit der Projekte `MieleRESTServer` (akappner),
 	### **WORK IN PROGRESS**
 -->
 
+### 0.3.47
+- Ein Befehl unter `control.*`, der nicht ausgeführt werden kann (Steuerung aus, Gerät nicht verbunden, HTTP-Fehler, Verbindungsfehler), wird jetzt bestätigt (`val=false`, `ack=true`), der Grund steht im Kommentar `c` des Datenpunkts, dazu eine passende Qualität `q`. Bisher blieb er unbestätigt stehen – ein `control.powerOn` stand so 52 Tage da.
+- Unbestätigte Befehle von vor einem Neustart werden beim Start geschlossen und **nicht** an das Gerät gesendet.
+- `remainingMinutes`/`remainingHHMM` sind 0, solange das Gerät aus, fertig oder nicht verbunden ist (Status 1/7/255), und es wird kein Programmende berechnet. Eine G5840 meldete ausgeschaltet eine Restzeit von 0:01.
+- Verbindungsverlust zu einem Gerät und seine Rückkehr stehen je einmal im Log (Stufe info, bisher nur debug).
+- Die IP-Suche bei Ausfall („Bei Ausfall die neue IP im Subnetz suchen“) läuft auch dann im Hintergrund, wenn die mDNS-Suche aus ist – also genau im Docker-Bridge-Betrieb, für den sie gedacht ist. Sie fragt nur Geräte, deren Abfrage gerade scheitert, und durchsucht jedes /24-Netz mit einem fehlenden Gerät, nicht nur das Netz der ersten eingetragenen IP.
+
 ### 0.3.46
 - Nur das laufende Gerät wird im kurzen Takt abgefragt („Abfrageintervall (aktiv)“), Geräte in Ruhe behalten den Ruhetakt. Bisher wurden alle Geräte im kurzen Takt abgefragt, sobald eines lief – weniger Anfragen an die Miele-Module, die nur eine Verbindung gleichzeitig bedienen.
 

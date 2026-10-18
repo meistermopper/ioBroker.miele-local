@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "miele-local",
-    "version": "0.3.46",
+    "version": "0.3.47",
     "titleLang": {
       "en": "Miele@local",
       "de": "Miele@local",
@@ -52,6 +52,19 @@
     "readme": "https://github.com/SmarthomeElektroniker/ioBroker.miele-local/blob/main/README.md",
     "loglevel": "info",
     "news": {
+      "0.3.47": {
+        "en": "Commands that cannot be executed are acknowledged with the reason (state comment and quality) instead of staying unacknowledged; pending commands from before a restart are closed without being sent. Remaining time is 0 while an appliance is off or finished. A lost and restored connection is logged once at info level. The IP fallback search also runs without mDNS and in every subnet with a missing appliance",
+        "de": "Nicht ausführbare Befehle werden mit Grund bestätigt (Kommentar und Qualität des Datenpunkts), statt unbestätigt stehen zu bleiben; offene Befehle von vor einem Neustart werden geschlossen, ohne sie zu senden. Restzeit ist 0, solange ein Gerät aus oder fertig ist. Verbindungsverlust und Wiederkehr stehen je einmal im Log (info). Die IP-Suche bei Ausfall läuft auch ohne mDNS und in jedem Subnetz mit einem fehlenden Gerät",
+        "ru": "Невыполнимые команды подтверждаются с указанием причины (комментарий и качество состояния), а не остаются неподтверждёнными; ожидающие команды до перезапуска закрываются без отправки. Оставшееся время равно 0, пока прибор выключен или завершил работу. Потеря и восстановление связи записываются в журнал один раз (info). Поиск IP при сбое работает и без mDNS, во всех подсетях с отсутствующим прибором",
+        "pt": "Comandos que não podem ser executados são confirmados com o motivo (comentário e qualidade do estado) em vez de ficarem por confirmar; comandos pendentes de antes de um reinício são fechados sem serem enviados. O tempo restante é 0 enquanto o aparelho está desligado ou concluído. Perda e recuperação da ligação são registadas uma vez (info). A procura de IP em caso de falha também funciona sem mDNS e em todas as sub-redes com um aparelho em falta",
+        "nl": "Opdrachten die niet uitgevoerd kunnen worden, worden met de reden bevestigd (commentaar en kwaliteit van de state) in plaats van onbevestigd te blijven; openstaande opdrachten van vóór een herstart worden gesloten zonder ze te verzenden. De resttijd is 0 zolang een apparaat uit of klaar is. Verbindingsverlies en herstel worden één keer gelogd (info). Het zoeken naar het IP-adres bij uitval werkt ook zonder mDNS en in elk subnet met een ontbrekend apparaat",
+        "fr": "Les commandes non exécutables sont acquittées avec la raison (commentaire et qualité de l'état) au lieu de rester non acquittées ; les commandes en attente d'avant un redémarrage sont fermées sans être envoyées. Le temps restant vaut 0 tant qu'un appareil est éteint ou terminé. La perte et le retour de la connexion sont journalisés une seule fois (info). La recherche d'IP en cas de panne fonctionne aussi sans mDNS et dans chaque sous-réseau où un appareil manque",
+        "it": "I comandi non eseguibili vengono confermati con il motivo (commento e qualità dello stato) invece di restare non confermati; i comandi in sospeso precedenti a un riavvio vengono chiusi senza essere inviati. Il tempo residuo è 0 finché l'elettrodomestico è spento o ha finito. Perdita e ripristino della connessione vengono registrati una sola volta (info). La ricerca dell'IP in caso di guasto funziona anche senza mDNS e in ogni sottorete con un elettrodomestico mancante",
+        "es": "Los comandos que no se pueden ejecutar se confirman con el motivo (comentario y calidad del estado) en lugar de quedar sin confirmar; los comandos pendientes de antes de un reinicio se cierran sin enviarse. El tiempo restante es 0 mientras el aparato está apagado o ha terminado. La pérdida y la recuperación de la conexión se registran una sola vez (info). La búsqueda de IP ante un fallo funciona también sin mDNS y en cada subred con un aparato ausente",
+        "pl": "Polecenia, których nie można wykonać, są potwierdzane z podaniem przyczyny (komentarz i jakość stanu), zamiast pozostawać niepotwierdzone; oczekujące polecenia sprzed restartu są zamykane bez wysyłania. Pozostały czas wynosi 0, gdy urządzenie jest wyłączone lub zakończyło pracę. Utrata i powrót połączenia są zapisywane w dzienniku jednorazowo (info). Wyszukiwanie IP po awarii działa także bez mDNS i w każdej podsieci z brakującym urządzeniem",
+        "uk": "Команди, які неможливо виконати, підтверджуються із зазначенням причини (коментар і якість стану), а не залишаються непідтвердженими; очікувані команди до перезапуску закриваються без надсилання. Залишковий час дорівнює 0, поки прилад вимкнений або завершив роботу. Втрата та відновлення зв'язку записуються в журнал один раз (info). Пошук IP при збої працює і без mDNS, у кожній підмережі з відсутнім приладом",
+        "zh-cn": "无法执行的命令会附带原因（状态注释和质量）确认，而不再保持未确认；重启前的待处理命令会被关闭且不发送。电器关闭或程序结束时剩余时间为 0。连接丢失与恢复只在日志中记录一次（info）。IP 故障搜索在没有 mDNS 时也会运行，并覆盖每个缺少电器的子网"
+      },
       "0.3.46": {
         "en": "Only the running appliance is polled at the short interval, idle appliances keep the idle interval - fewer requests to the Miele modules (until now all appliances were polled at the short interval as soon as one was running)",
         "de": "Nur das laufende Gerät wird im kurzen Takt abgefragt, Geräte in Ruhe behalten den Ruhetakt - weniger Anfragen an die Miele-Module (bisher wurden alle Geräte im kurzen Takt abgefragt, sobald eines lief)",
@@ -129,19 +142,6 @@
         "pl": "Poprawiono typy urządzeń (16 mikrofalówka, 67 piekarnik Dialog, 25 podgrzewacz naczyń, pralko-suszarka z programami pralki); nowe typy: robot sprzątający, piekarnik parowy kombi, piekarnik parowy z mikrofalą (418 programów), urządzenia profesjonalne. Podziękowania dla Home Assistant za tabele.",
         "uk": "Виправлено типи пристроїв (16 мікрохвильова піч, 67 піч Dialog, 25 підігрівач посуду, прально-сушильна машина з програмами пральної машини); нові типи: робот-пилосос, комбі-пароварка, пароварка з мікрохвильовою піччю (418 програм), професійні прилади. Подяка Home Assistant за таблиці.",
         "zh-cn": "修正设备类型（16 微波炉、67 Dialog 烤箱、25 暖碟机、洗干一体机使用洗衣机程序）；新增类型：扫地机器人、蒸烤箱、微波蒸箱（418 个程序）、专业设备。感谢 Home Assistant 提供的表格。"
-      },
-      "0.3.40": {
-        "en": "README: hints for a failing login (ad blocker), moving to another system and why mDNS may find nothing; clearer log message when no appliance is found (#12).",
-        "de": "README: Hinweise bei scheiterndem Login (Werbeblocker), zum Umzug auf ein anderes System und warum mDNS nichts findet; deutlichere Logmeldung, wenn kein Gerät gefunden wird (#12).",
-        "ru": "README: подсказки при неудачном входе (блокировщик рекламы), при переносе на другую систему и о том, почему mDNS ничего не находит; более понятное сообщение в журнале, если устройство не найдено (#12).",
-        "pt": "README: dicas para um login falhado (bloqueador de anúncios), para mudar para outro sistema e porque o mDNS pode não encontrar nada; mensagem de registo mais clara quando nenhum aparelho é encontrado (#12).",
-        "nl": "README: tips bij een mislukte login (adblocker), bij verhuizing naar een ander systeem en waarom mDNS niets vindt; duidelijkere logmelding als er geen apparaat wordt gevonden (#12).",
-        "fr": "README : conseils en cas d'échec de connexion (bloqueur de publicités), pour migrer vers un autre système et pourquoi mDNS ne trouve rien ; message de journal plus clair lorsqu'aucun appareil n'est trouvé (#12).",
-        "it": "README: suggerimenti per un login non riuscito (blocco pubblicità), per il trasferimento su un altro sistema e perché mDNS non trova nulla; messaggio di log più chiaro quando non viene trovato alcun apparecchio (#12).",
-        "es": "README: consejos para un inicio de sesión fallido (bloqueador de anuncios), para migrar a otro sistema y por qué mDNS no encuentra nada; mensaje de registro más claro cuando no se encuentra ningún aparato (#12).",
-        "pl": "README: wskazówki przy nieudanym logowaniu (bloker reklam), przy przenoszeniu na inny system i dlaczego mDNS nic nie znajduje; czytelniejszy komunikat w dzienniku, gdy nie znaleziono urządzenia (#12).",
-        "uk": "README: підказки при невдалому вході (блокувальник реклами), при перенесенні на іншу систему та чому mDNS нічого не знаходить; зрозуміліше повідомлення в журналі, якщо пристрій не знайдено (#12).",
-        "zh-cn": "README：登录失败（广告拦截器）、迁移到其他系统以及 mDNS 找不到设备原因的提示；未找到设备时日志信息更清晰 (#12)。"
       }
     },
     "mode": "daemon",
