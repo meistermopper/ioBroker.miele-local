@@ -450,6 +450,85 @@
                     "lg": 4,
                     "xl": 4,
                     "help": "Must be reachable inbound from the appliance network. In a Docker container this reliably works only with network_mode: host."
+                },
+                "_timeServerHeader": {
+                    "type": "header",
+                    "size": 4,
+                    "newLine": true,
+                    "text": "Miele time server",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "timeServer": {
+                    "type": "checkbox",
+                    "label": "Answer the appliances' time request (Miele time server)",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6,
+                    "help": "Off by default. Miele appliances fetch their clock time via HTTP, not via NTP. Read the instructions below - without a redirect the appliances never reach this service."
+                },
+                "timeServerPort": {
+                    "type": "number",
+                    "label": "Time server port (TCP)",
+                    "min": 1,
+                    "max": 65535,
+                    "hidden": "!data.timeServer",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4,
+                    "help": "Port this service listens on. Ports below 1024 (e.g. 80) need extra rights; use a higher port and let the router or Docker map port 80 to it."
+                },
+                "timeServerBind": {
+                    "type": "text",
+                    "label": "Bind address (empty = all)",
+                    "hidden": "!data.timeServer",
+                    "xs": 12,
+                    "sm": 6,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4,
+                    "help": "Leave empty to listen on all network interfaces, or enter one local IP address."
+                },
+                "_timeServerText": {
+                    "type": "staticText",
+                    "newLine": true,
+                    "text": "Miele appliances do not use NTP. They fetch the time via HTTP from ntp.mcs2.miele.com on TCP port 80 (GET /V2/NTP/); this address is fixed in the module. Without internet access they get no answer and their clock drifts. This service gives the same answer from your network, but the appliances must be redirected to it - one of: (a) Router: a destination NAT / port forwarding rule - source the Miele appliances, destination ntp.mcs2.miele.com (currently 52.136.223.17) TCP 80, forwarded to the ioBroker IP and the port set here. If ioBroker sits in the same subnet as the appliances, add a source NAT (masquerade) for this flow as well, otherwise the answer bypasses the router and the appliance drops it. (b) DNS: rewrite ntp.mcs2.miele.com to the ioBroker IP - then the service must be reachable on port 80 (in Docker map host port 80 to this port). In Docker the port must be published in the container's port mapping, and a firewall on the host (e.g. Synology DSM) must let the appliances in. The service only delivers UTC; the appliance applies its time zone and daylight saving time itself. Check: info.timeServer.clients.* counts the requests per sender.",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "_clockHeader": {
+                    "type": "header",
+                    "size": 4,
+                    "newLine": true,
+                    "text": "Appliance clock",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "keepDeviceClock": {
+                    "type": "checkbox",
+                    "label": "Keep the appliance clock on local time",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6,
+                    "help": "Off by default. Checks the clock of each appliance at start and every hour and sets it to the local time of ioBroker if it differs by more than 2 minutes. Only appliances that report their clock (Settings/TimeSync) are affected; others are left alone. Each correction is logged. Some appliances miss the change to or from daylight saving time."
                 }
             }
         },

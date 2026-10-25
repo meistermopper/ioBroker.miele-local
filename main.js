@@ -27,6 +27,8 @@ const ids = require('./lib/ids');
 const felder = require('./lib/felder');
 const csvBauer = require('./lib/csv');
 const datenpunkte = require('./lib/datenpunkte');
+const { MieleZeitdienst } = require('./lib/zeitdienst');
+const uhrzeit = require('./lib/uhrzeit');
 
 /**
  * Verschnaufpause zwischen zwei Scan-Durchgaengen.
@@ -311,6 +313,9 @@ class MieleLocal extends utils.Adapter {
         await this.aktualisiereInstanzObjekte();
         await this.setStateAsync('info.connection', { val: false, ack: true });
 
+        // Zeitdienst zuerst: Er braucht keinen GroupKey und soll auch ohne Anmeldung laufen.
+        await this.zeitdienstStarten();
+
         const groupId = this.config.groupId;
         const groupKey = this.config.groupKey;
         if (!groupId || !groupKey) {
@@ -378,6 +383,12 @@ class MieleLocal extends utils.Adapter {
         // Betriebsstunden: einmal beim Start, danach stuendlich - siehe pollHours().
         this.pollHours();
         this.schleife('hoursTimer', () => this.pollHours(), 60 * 60 * 1000);
+
+        // Geraeteuhr auf Ortszeit halten (Standard aus): beim Start und danach stuendlich.
+        if (this.config.keepDeviceClock) {
+            this.geraeteuhrenPruefen().catch(e => this.log.debug(`Device clock: ${e.message}`));
+            this.schleife('uhrTimer', () => this.geraeteuhrenPruefen(), 60 * 60 * 1000);
+        }
 
         /*
          * Den Werteverlauf der gefundenen Leafs mitschreiben.
@@ -4500,6 +4511,246 @@ class MieleLocal extends utils.Adapter {
         }
     }
 
+    /**
+     * Die Uhr der Geraete auf Ortszeit halten (Einstellung keepDeviceClock, Standard aus).
+     *
+     * Liest je Geraet Settings/TimeSync. Nur Geraete, die dort mit 200 antworten, werden
+     * beachtet (G5840/WCR860 liefern 503 und bleiben unberuehrt). Weicht DateTime mehr als
+     * 2 Minuten von der Ortszeit des ioBroker-Prozesses ab, stellt ein PUT mit nur
+     * {"DateTime":[...]} die Uhr; NTPEnabled, UTCOffset und TimeMaster bleiben, wie sie sind.
+     * Anlass: Ein Backofen H2469BP blieb am 25.10.2026 nach der Rueckstellung auf Winterzeit
+     * eine Stunde vor - siehe lib/uhrzeit.js.
+     */
+    async geraeteuhrenPruefen() {
+        const zone = uhrzeit.zeitzone();
+        for (const [deviceId, dev] of Object.entries(this.devices || {})) {
+            if (this.stopping) {
+                return;
+            }
+            const res = `Devices/${dev.route}/Settings/TimeSync/`;
+            let ts;
+            try {
+                ts = await dev.api.get(res);
+            } catch (e) {
+                this.log.debug(`Device clock ${deviceId}: TimeSync not readable (${e.message})`);
+                continue;
+            }
+            const { abweichungS, setzen } = uhrzeit.pruefen(ts, Date.now(), zone);
+            if (abweichungS === null) {
+                this.log.debug(`Device clock ${deviceId}: TimeSync without usable DateTime`);
+                continue;
+            }
+            await this.uhrObjekteAnlegen(deviceId);
+            await this.setStateAsync(`${deviceId}.info.timeSync.lastDeviation`, { val: abweichungS, ack: true });
+            if (!setzen) {
+                this.log.debug(`Device clock ${deviceId}: deviation ${abweichungS} s, within limit`);
+                continue;
+            }
+            const rumpf = uhrzeit.stellRumpf(Date.now(), zone);
+            let status;
+            try {
+                status = await dev.api.put(res, rumpf);
+            } catch (e) {
+                this.log.warn(`Device clock ${deviceId}: setting the time failed (${e.message})`);
+                continue;
+            }
+            if (status < 200 || status >= 300) {
+                this.log.warn(`Device clock ${deviceId}: setting the time failed (HTTP ${status})`);
+                continue;
+            }
+            let danach = null;
+            try {
+                danach = uhrzeit.abweichung(await dev.api.get(res), Date.now(), zone);
+            } catch {
+                /* Zuruecklesen ist nur Kontrolle */
+            }
+            const alt = ts.DateTime;
+            const zwei = n => String(n).padStart(2, '0');
+            const vorher = `${zwei(alt[3])}:${zwei(alt[4])}:${zwei(alt[5])}`;
+            const vz = abweichungS > 0 ? '+' : '';
+            const nachher = danach === null ? '' : ` - deviation now ${danach} s`;
+            this.log.info(
+                `Device clock ${deviceId}: was ${vorher} (${vz}${abweichungS} s against local time ${zone}), set to local time${nachher}`,
+            );
+            await this.setStateAsync(`${deviceId}.info.timeSync.lastSet`, { val: Date.now(), ack: true });
+        }
+    }
+
+    /**
+     * Die Datenpunkte fuer die Geraeteuhr anlegen (nur bei Geraeten mit lesbarem TimeSync).
+     *
+     * @param {string} deviceId Geraet
+     */
+    async uhrObjekteAnlegen(deviceId) {
+        if (!this._uhrObjekte) {
+            this._uhrObjekte = {};
+        }
+        if (this._uhrObjekte[deviceId]) {
+            return;
+        }
+        const de = this.config.germanNames !== false;
+        await this.objektNachziehen(`${deviceId}.info.timeSync`, {
+            type: 'folder',
+            common: { name: namen.text('Geräteuhr', 'Appliance clock', de) },
+            native: {},
+        });
+        await this.objektNachziehen(`${deviceId}.info.timeSync.lastSet`, {
+            type: 'state',
+            common: {
+                name: namen.text('Uhr zuletzt gestellt', 'Clock last set', de),
+                type: 'number',
+                role: 'date',
+                read: true,
+                write: false,
+                def: 0,
+            },
+            native: {},
+        });
+        await this.objektNachziehen(`${deviceId}.info.timeSync.lastDeviation`, {
+            type: 'state',
+            common: {
+                name: namen.text('Abweichung von der Ortszeit', 'Deviation from local time', de),
+                type: 'number',
+                role: 'value',
+                unit: 's',
+                read: true,
+                write: false,
+                def: 0,
+            },
+            native: {},
+        });
+        this._uhrObjekte[deviceId] = true;
+    }
+
+    /**
+     * Den eingebauten Miele-Zeitdienst starten (Einstellung timeServer).
+     *
+     * Die Kommunikationsmodule holen ihre Uhrzeit per HTTP von ntp.mcs2.miele.com:80 - siehe
+     * lib/zeitdienst.js. Ohne Internet bleibt die Antwort aus. Der Dienst beantwortet dieselbe
+     * Abfrage im eigenen Netz; hinleiten muss man die Geraete per DNAT oder DNS (README).
+     * Ein Fehler beim Start (Port belegt, Port < 1024 ohne Rechte) legt nur den Dienst still,
+     * nicht den Adapter.
+     */
+    async zeitdienstStarten() {
+        if (!this.config.timeServer) {
+            // Abgeschaltet: einen alten "laeuft"-Wert nicht stehen lassen, aber nichts neu anlegen.
+            const obj = await this.getObjectAsync('info.timeServer.running');
+            if (obj) {
+                await this.setStateAsync('info.timeServer.running', { val: false, ack: true });
+            }
+            return;
+        }
+        const de = this.config.germanNames !== false;
+        await this.objektNachziehen('info.timeServer', {
+            type: 'channel',
+            common: { name: namen.text('Miele-Zeitdienst', 'Miele time server', de) },
+            native: {},
+        });
+        await this.objektNachziehen('info.timeServer.clients', {
+            type: 'channel',
+            common: { name: namen.text('Abrufer', 'Requesting devices', de) },
+            native: {},
+        });
+        const zustaende = [
+            ['running', namen.text('Zeitdienst läuft', 'Time server running', de), 'boolean', 'indicator', false],
+            ['requests', namen.text('Zeitabfragen gesamt', 'Time requests (total)', de), 'number', 'value', 0],
+            ['lastRequest', namen.text('Letzte Zeitabfrage', 'Last time request', de), 'number', 'date', 0],
+            ['lastClient', namen.text('Letzter Abrufer (IP)', 'Last requesting device (IP)', de), 'string', 'text', ''],
+        ];
+        for (const [id, name, type, role, def] of zustaende) {
+            await this.objektNachziehen(`info.timeServer.${id}`, {
+                type: 'state',
+                common: { name, type, role, read: true, write: false, def },
+                native: {},
+            });
+        }
+        const bisher = await this.getStateAsync('info.timeServer.requests');
+        this._zeitAbrufe = bisher && typeof bisher.val === 'number' ? bisher.val : 0;
+        this._zeitClients = {};
+
+        const port = Math.round(Number(this.config.timeServerPort)) || 8780;
+        const bind = String(this.config.timeServerBind || '').trim();
+        this.zeitdienst = new MieleZeitdienst({
+            port,
+            bind,
+            log: this.log,
+            onAbruf: (ip, zeit) => {
+                // Nacheinander abarbeiten, damit zwei schnelle Abfragen keinen Zaehler verlieren.
+                this._zeitKette = (this._zeitKette || Promise.resolve())
+                    .then(() => this.zeitAbrufMerken(ip, zeit))
+                    .catch(e => this.log.warn(`Time server: could not update states: ${e.message}`));
+            },
+        });
+        try {
+            await this.zeitdienst.start();
+            this.log.info(`Miele time server listening on ${bind || '*'}:${port}`);
+            await this.setStateAsync('info.timeServer.running', { val: true, ack: true });
+        } catch (e) {
+            this.zeitdienst = null;
+            const hinweis =
+                e.code === 'EACCES'
+                    ? ' - ports below 1024 need extra rights; use a higher port and redirect/map 80 to it'
+                    : e.code === 'EADDRINUSE'
+                      ? ' - the port is already in use'
+                      : '';
+            this.log.error(`Miele time server could not start on ${bind || '*'}:${port}: ${e.message}${hinweis}`);
+            await this.setStateAsync('info.timeServer.running', { val: false, ack: true });
+        }
+    }
+
+    /**
+     * Eine beantwortete Zeitabfrage in den Datenpunkten festhalten.
+     *
+     * @param {string} ip Absender
+     * @param {number} zeit Zeitpunkt der Antwort in ms
+     */
+    async zeitAbrufMerken(ip, zeit) {
+        if (this.stopping) {
+            return;
+        }
+        this._zeitAbrufe = (this._zeitAbrufe || 0) + 1;
+        await this.setStateAsync('info.timeServer.requests', { val: this._zeitAbrufe, ack: true });
+        await this.setStateAsync('info.timeServer.lastRequest', { val: zeit, ack: true });
+        await this.setStateAsync('info.timeServer.lastClient', { val: ip, ack: true });
+
+        const kanal = `info.timeServer.clients.${ip.replace(this.FORBIDDEN_CHARS, '_').replace(/[.:]/g, '_')}`;
+        let eintrag = this._zeitClients[kanal];
+        if (!eintrag) {
+            const de = this.config.germanNames !== false;
+            await this.objektNachziehen(kanal, { type: 'channel', common: { name: ip }, native: {} });
+            await this.objektNachziehen(`${kanal}.requests`, {
+                type: 'state',
+                common: {
+                    name: namen.text('Zeitabfragen', 'Time requests', de),
+                    type: 'number',
+                    role: 'value',
+                    read: true,
+                    write: false,
+                    def: 0,
+                },
+                native: {},
+            });
+            await this.objektNachziehen(`${kanal}.lastRequest`, {
+                type: 'state',
+                common: {
+                    name: namen.text('Letzte Zeitabfrage', 'Last time request', de),
+                    type: 'number',
+                    role: 'date',
+                    read: true,
+                    write: false,
+                    def: 0,
+                },
+                native: {},
+            });
+            const st = await this.getStateAsync(`${kanal}.requests`);
+            eintrag = { anzahl: st && typeof st.val === 'number' ? st.val : 0 };
+            this._zeitClients[kanal] = eintrag;
+        }
+        eintrag.anzahl++;
+        await this.setStateAsync(`${kanal}.requests`, { val: eintrag.anzahl, ack: true });
+        await this.setStateAsync(`${kanal}.lastRequest`, { val: zeit, ack: true });
+    }
+
     async onUnload(callback) {
         this.stopping = true;
         try {
@@ -4524,8 +4775,16 @@ class MieleLocal extends utils.Adapter {
             if (this.secTimer) {
                 this.clearTimeout(this.secTimer);
             }
+            if (this.uhrTimer) {
+                this.clearTimeout(this.uhrTimer);
+            }
             if (this.push) {
                 await this.push.stop();
+            }
+            if (this.zeitdienst) {
+                await this.zeitdienst.stop();
+                this.zeitdienst = null;
+                await this.setStateAsync('info.timeServer.running', { val: false, ack: true });
             }
             await this.setStateAsync('info.connection', { val: false, ack: true });
             for (const deviceId of Object.keys(this.devices || {})) {
