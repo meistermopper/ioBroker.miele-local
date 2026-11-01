@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "miele-local",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "titleLang": {
       "en": "Miele@local",
       "de": "Miele@local",
@@ -52,6 +52,19 @@
     "readme": "https://github.com/SmarthomeElektroniker/ioBroker.miele-local/blob/main/README.md",
     "loglevel": "info",
     "news": {
+      "0.4.2": {
+        "en": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "de": "Pflege-Release: Versionshinweise im io-package.json gekürzt (Repository-Checker W1032/W2004), keine funktionale Änderung",
+        "ru": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "pt": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "nl": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "fr": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "it": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "es": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "pl": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "uk": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
+        "zh-cn": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change"
+      },
       "0.4.1": {
         "en": "New option 'Keep the appliance clock on local time' (off by default): checks the appliance clock (Settings/TimeSync) at start and hourly and sets it to the local time if it differs by more than 2 minutes",
         "de": "Neue Option „Geräteuhr auf Ortszeit halten“ (Standard aus): prüft die Geräteuhr (Settings/TimeSync) beim Start und stündlich und stellt sie auf die Ortszeit, wenn sie mehr als 2 Minuten abweicht",
@@ -64,19 +77,6 @@
         "pl": "Nowa opcja „Utrzymuj zegar urządzenia w czasie lokalnym” (domyślnie wyłączona): sprawdza zegar (Settings/TimeSync) przy starcie i co godzinę i ustawia czas lokalny przy odchyłce ponad 2 minuty",
         "uk": "Нова опція «Тримати годинник приладу за місцевим часом» (за замовчуванням вимкнена): перевіряє годинник (Settings/TimeSync) під час запуску та щогодини і встановлює місцевий час при відхиленні понад 2 хвилини",
         "zh-cn": "新选项“使设备时钟保持本地时间”（默认关闭）：启动时及每小时检查设备时钟（Settings/TimeSync），偏差超过 2 分钟时校准为本地时间"
-      },
-      "0.4.0": {
-        "en": "New optional Miele time server: answers the appliances' HTTP time request (ntp.mcs2.miele.com/V2/NTP/) inside your network. Off by default; the appliances must be redirected to it (DNAT or DNS), see README. Leaf table: DateTimeInfo is 14/122",
-        "de": "Neuer optionaler Miele-Zeitdienst: beantwortet die HTTP-Zeitabfrage der Geräte (ntp.mcs2.miele.com/V2/NTP/) im eigenen Netz. Standardmäßig aus; die Geräte müssen zu ihm umgeleitet werden (DNAT oder DNS), siehe README. Leaf-Tabelle: DateTimeInfo ist 14/122",
-        "ru": "Новый необязательный сервер времени Miele: отвечает на HTTP-запрос времени от приборов (ntp.mcs2.miele.com/V2/NTP/) в вашей сети. По умолчанию выключен; приборы нужно перенаправить на него (DNAT или DNS), см. README. Таблица leaf: DateTimeInfo — 14/122",
-        "pt": "Novo servidor de hora Miele opcional: responde ao pedido de hora HTTP dos aparelhos (ntp.mcs2.miele.com/V2/NTP/) na sua rede. Desativado por predefinição; os aparelhos têm de ser redirecionados para ele (DNAT ou DNS), ver README. Tabela de leafs: DateTimeInfo é 14/122",
-        "nl": "Nieuwe optionele Miele-tijdserver: beantwoordt de HTTP-tijdaanvraag van de apparaten (ntp.mcs2.miele.com/V2/NTP/) in uw eigen netwerk. Standaard uit; de apparaten moeten ernaartoe worden omgeleid (DNAT of DNS), zie README. Leaf-tabel: DateTimeInfo is 14/122",
-        "fr": "Nouveau serveur de temps Miele optionnel : répond à la demande d'heure HTTP des appareils (ntp.mcs2.miele.com/V2/NTP/) dans votre réseau. Désactivé par défaut ; les appareils doivent y être redirigés (DNAT ou DNS), voir README. Table des leafs : DateTimeInfo est 14/122",
-        "it": "Nuovo server dell'ora Miele opzionale: risponde alla richiesta HTTP dell'ora degli apparecchi (ntp.mcs2.miele.com/V2/NTP/) nella propria rete. Disattivato per impostazione predefinita; gli apparecchi devono esservi reindirizzati (DNAT o DNS), vedere README. Tabella leaf: DateTimeInfo è 14/122",
-        "es": "Nuevo servidor de hora Miele opcional: responde a la solicitud de hora HTTP de los aparatos (ntp.mcs2.miele.com/V2/NTP/) en su red. Desactivado por defecto; los aparatos deben redirigirse a él (DNAT o DNS), ver README. Tabla de leafs: DateTimeInfo es 14/122",
-        "pl": "Nowy opcjonalny serwer czasu Miele: odpowiada na zapytania HTTP urządzeń o czas (ntp.mcs2.miele.com/V2/NTP/) we własnej sieci. Domyślnie wyłączony; urządzenia trzeba do niego przekierować (DNAT lub DNS), patrz README. Tabela leafów: DateTimeInfo to 14/122",
-        "uk": "Новий необов'язковий сервер часу Miele: відповідає на HTTP-запит часу від приладів (ntp.mcs2.miele.com/V2/NTP/) у вашій мережі. Типово вимкнений; прилади треба перенаправити до нього (DNAT або DNS), див. README. Таблиця leaf: DateTimeInfo — 14/122",
-        "zh-cn": "新增可选的 Miele 时间服务：在您自己的网络中响应电器的 HTTP 时间请求（ntp.mcs2.miele.com/V2/NTP/）。默认关闭；必须把电器重定向到此服务（DNAT 或 DNS），见 README。Leaf 表：DateTimeInfo 为 14/122"
       },
       "0.3.47": {
         "en": "Commands that cannot be executed are acknowledged with the reason (state comment and quality) instead of staying unacknowledged; pending commands from before a restart are closed without being sent. Remaining time is 0 while an appliance is off or finished. A lost and restored connection is logged once at info level. The IP fallback search also runs without mDNS and in every subnet with a missing appliance",
@@ -129,32 +129,6 @@
         "pl": "Obiekty historii są zapisywane ponownie tylko przy rzeczywistej zmianie - koniec z pustymi (null) punktami w adapterze history po każdym restarcie",
         "uk": "Об'єкти історії перезаписуються лише за реальної зміни - більше немає порожніх (null) точок в адаптері history після кожного перезапуску",
         "zh-cn": "历史对象仅在实际更改时才会重写 - 每次重启后 history 适配器中不再出现空 (null) 点"
-      },
-      "0.3.43": {
-        "en": "All log messages, diagnostic texts in states, error messages and the CSV export are English now; the admin UI uses English i18n keys and the diagnostics tab is translated into all 11 languages.",
-        "de": "Alle Logmeldungen, Diagnosetexte in Datenpunkten, Fehlermeldungen und der CSV-Export sind jetzt englisch; die Admin-Oberfläche nutzt englische i18n-Schlüssel, der Diagnose-Reiter ist in alle 11 Sprachen übersetzt.",
-        "ru": "Все сообщения журнала, диагностические тексты в состояниях, сообщения об ошибках и экспорт CSV теперь на английском; интерфейс администратора использует английские ключи i18n, вкладка диагностики переведена на все 11 языков.",
-        "pt": "Todas as mensagens de registo, textos de diagnóstico nos estados, mensagens de erro e a exportação CSV estão agora em inglês; a interface de administração usa chaves i18n em inglês e o separador de diagnóstico está traduzido para as 11 línguas.",
-        "nl": "Alle logmeldingen, diagnoseteksten in states, foutmeldingen en de CSV-export zijn nu Engels; de beheerinterface gebruikt Engelse i18n-sleutels en het diagnosetabblad is in alle 11 talen vertaald.",
-        "fr": "Tous les messages de journal, textes de diagnostic dans les états, messages d'erreur et l'export CSV sont désormais en anglais ; l'interface d'administration utilise des clés i18n anglaises et l'onglet de diagnostic est traduit dans les 11 langues.",
-        "it": "Tutti i messaggi di log, i testi diagnostici negli stati, i messaggi di errore e l'esportazione CSV sono ora in inglese; l'interfaccia di amministrazione usa chiavi i18n inglesi e la scheda di diagnostica è tradotta in tutte le 11 lingue.",
-        "es": "Todos los mensajes de registro, textos de diagnóstico en los estados, mensajes de error y la exportación CSV están ahora en inglés; la interfaz de administración usa claves i18n en inglés y la pestaña de diagnóstico está traducida a los 11 idiomas.",
-        "pl": "Wszystkie komunikaty dziennika, teksty diagnostyczne w stanach, komunikaty o błędach i eksport CSV są teraz po angielsku; interfejs administratora używa angielskich kluczy i18n, a zakładka diagnostyki jest przetłumaczona na wszystkie 11 języków.",
-        "uk": "Усі повідомлення журналу, діагностичні тексти в станах, повідомлення про помилки та експорт CSV тепер англійською; інтерфейс адміністратора використовує англійські ключі i18n, вкладку діагностики перекладено всіма 11 мовами.",
-        "zh-cn": "所有日志消息、状态中的诊断文本、错误消息和 CSV 导出现均为英文；管理界面使用英文 i18n 键，诊断选项卡已翻译成全部 11 种语言。"
-      },
-      "0.3.42": {
-        "en": "All program phases now have German names; status codes 144 (default) and 145 (locked) added. Translations and test idea by meistermopper (#14).",
-        "de": "Alle Programmphasen haben jetzt deutsche Namen; Statuswerte 144 (Standard) und 145 (Gesperrt) ergänzt. Übersetzungen und Testidee von meistermopper (#14).",
-        "ru": "Все фазы программ теперь имеют немецкие названия; добавлены коды состояния 144 (стандарт) и 145 (заблокировано). Переводы и идея теста от meistermopper (#14).",
-        "pt": "Todas as fases de programa têm agora nomes em alemão; adicionados os estados 144 (padrão) e 145 (bloqueado). Traduções e ideia de teste de meistermopper (#14).",
-        "nl": "Alle programmafasen hebben nu Duitse namen; statuscodes 144 (standaard) en 145 (vergrendeld) toegevoegd. Vertalingen en testidee van meistermopper (#14).",
-        "fr": "Toutes les phases de programme ont désormais des noms allemands ; codes d'état 144 (par défaut) et 145 (verrouillé) ajoutés. Traductions et idée de test par meistermopper (#14).",
-        "it": "Tutte le fasi del programma hanno ora nomi tedeschi; aggiunti i codici di stato 144 (predefinito) e 145 (bloccato). Traduzioni e idea del test di meistermopper (#14).",
-        "es": "Todas las fases de programa tienen ahora nombres en alemán; añadidos los estados 144 (predeterminado) y 145 (bloqueado). Traducciones e idea de prueba de meistermopper (#14).",
-        "pl": "Wszystkie fazy programów mają teraz niemieckie nazwy; dodano kody stanu 144 (domyślny) i 145 (zablokowany). Tłumaczenia i pomysł testu od meistermopper (#14).",
-        "uk": "Усі фази програм тепер мають німецькі назви; додано коди стану 144 (стандарт) і 145 (заблоковано). Переклади та ідея тесту від meistermopper (#14).",
-        "zh-cn": "所有程序阶段现已有德语名称；新增状态码 144（默认）和 145（锁定）。翻译和测试思路来自 meistermopper (#14)。"
       }
     },
     "mode": "daemon",
