@@ -55,15 +55,15 @@
       "0.4.2": {
         "en": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
         "de": "Pflege-Release: Versionshinweise im io-package.json gekürzt (Repository-Checker W1032/W2004), keine funktionale Änderung",
-        "ru": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
-        "pt": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
-        "nl": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
-        "fr": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
-        "it": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
-        "es": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
-        "pl": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
-        "uk": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
-        "zh-cn": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change"
+        "ru": "Сервисный выпуск: сокращены заметки о версиях в io-package.json (проверка репозитория W1032/W2004), без функциональных изменений",
+        "pt": "Versão de manutenção: notas de versão em io-package.json reduzidas (verificador do repositório W1032/W2004), sem alteração funcional",
+        "nl": "Onderhoudsrelease: versie-opmerkingen in io-package.json ingekort (repository-checker W1032/W2004), geen functionele wijziging",
+        "fr": "Version de maintenance : notes de version raccourcies dans io-package.json (vérificateur du dépôt W1032/W2004), aucun changement fonctionnel",
+        "it": "Rilascio di manutenzione: note di versione ridotte in io-package.json (controllo del repository W1032/W2004), nessuna modifica funzionale",
+        "es": "Versión de mantenimiento: notas de versión recortadas en io-package.json (comprobador del repositorio W1032/W2004), sin cambios funcionales",
+        "pl": "Wydanie serwisowe: skrócono informacje o wersjach w io-package.json (kontrola repozytorium W1032/W2004), bez zmian funkcjonalnych",
+        "uk": "Сервісний випуск: скорочено примітки до версій у io-package.json (перевірка репозиторію W1032/W2004), без функціональних змін",
+        "zh-cn": "维护版本：精简了 io-package.json 中的版本说明（仓库检查 W1032/W2004），无功能变更"
       },
       "0.4.1": {
         "en": "New option 'Keep the appliance clock on local time' (off by default): checks the appliance clock (Settings/TimeSync) at start and hourly and sets it to the local time if it differs by more than 2 minutes",
