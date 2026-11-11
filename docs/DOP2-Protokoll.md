@@ -112,6 +112,24 @@ Prefix (hex): 00100001062f00000000000100010700
 ```
 Opcodes: 0x01 Start, 0x03 Pause, 0x37 Stop, 0x10 SwitchOn, 0x13 SwitchOff, 0x0d LightOn, 0x0e LightOff.
 
+### Ein-/Ausschalten (seit 0.4.3, `lib/einschalten.js`)
+Wie die Miele-App: Gerätezustand in **2/1586** (DeviceCombiState), Feld 1 ApplianceState, Typ E8,
+**4 = ein, 1 = aus**. Fester Rumpf (nur Feld 1):
+```
+000e 0002 0632 0000 0000 0001 | 0001 04 <04|01> + 0x20 bis 32 Byte
+```
+Kaffeevollautomat (DeviceType 17): 2/1586 lesen, Feld 1 ersetzen, ganzen Leaf zurückschreiben.
+Ablauf: State lesen (nur Auskunft) → GET 2/1586 (bei 500 wecken: `PUT State {"DeviceAction":2}`,
+3 s, Kaffee 5 s + 1,5 s) → PUT 2/1586 (bei 500 wecken und wiederholen, höchstens 2 Runden) →
+Rückfall 2/1583 (Kopf oben, unverändert) → Status nachlesen. ProtocolVersion 2 + Typ 17:
+`POST Devices/<serie>/DOP/ {"Request":"110102000102"}` (ein) bzw. `…103` (aus).
+
+Live 10.11.2026: G5840 (EK037 04.05) schaltet über 2/1586 mit festem Rumpf ein und aus (Status
+1 → 3 → 1). Den kurz nach dem Wecken gelesenen ganzen Leaf (ApplianceState 2, OperationState 15)
+nahm sie mit 204 an, blieb aber aus. WCR860 (EK037 04.05): jeder DOP2-Schreibbefehl 500,
+Antwort `{"Error": 20645, "CausedByXkm": 0}`; schon das Wecken schaltete sie ein (Status 1 → 2).
+H2469BP (EK057 08.37): jeder DOP2-Leaf 404.
+
 ### ProcessData (2/6195, Waschmaschine WCR860 — empirisch)
 Feld-Indizes (1-based), Nutzwert = interpretiertes Struct-Sub-Feld:
 

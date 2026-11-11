@@ -109,6 +109,17 @@ lässt sich nicht rückwirkend füllen. In `history.cyclesJson` stehen die letzt
 Datenpunkt setzt sich selbst zurück. Befehle wirken nur, solange am Gerät **MobileStart /
 Fernsteuerung** freigegeben ist; manche Firmwares lehnen DOP2-Schreibbefehle grundsätzlich ab.
 
+`powerOn` und `powerOff` schalten seit 0.4.3 wie die Miele-App: Sie schreiben den Gerätezustand in
+den DOP2-Leaf `2/1586` (4 = ein, 1 = aus). Schläft das Gerät und antwortet mit HTTP 500, wird es mit
+`{"DeviceAction":2}` geweckt und der Befehl wiederholt, höchstens zweimal. Erst danach kommt der ältere
+UserRequest `2/1583` an die Reihe. Kaffeevollautomaten mit Protokollversion 2 schaltet der Adapter über
+Dop1. Danach liest er den Status nach; der Kommentar `c` des Datenpunkts sagt, welcher Weg gegriffen
+hat und ob sich der Status geändert hat. Scheitert es, erklärt `c` den HTTP-Status: **404** = das
+Kommunikationsmodul bietet keine DOP2-Steuerung (z. B. XKM EK057), **403** = Fernsteuerung am Gerät
+aus, **500** = das Gerät nimmt den Befehl im aktuellen Zustand nicht an. Mit der Protokollstufe
+**debug** der Instanz steht jeder Schritt mit Ressource, HTTP-Status und Antwort als Hex im Log
+(ohne Schlüssel).
+
 ## Einstellungen
 
 | Reiter | Was darin steht |
@@ -312,6 +323,9 @@ Reverse-Engineering-Arbeit der Projekte `MieleRESTServer` (akappner),
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+- `control.powerOn`/`powerOff` schalten jetzt wie die Miele-App: DOP2-Leaf `2/1586` (Gerätezustand 4 = ein, 1 = aus), bei HTTP 500 wecken mit `{"DeviceAction":2}` und wiederholen (höchstens zwei Runden), der bisherige UserRequest `2/1583` nur noch als Rückfall; Kaffeevollautomaten mit Protokollversion 2 über Dop1-Objekt 1101. Die Wirkung wird durch Nachlesen des Status geprüft, Fehler werden nach HTTP-Status erklärt (403/404/500), RemoteEnable wird nur protokolliert, jeder Schritt steht im Debug-Log.
 
 ### 0.4.2
 - (SmarthomeElektroniker) Pflege: Versionshinweise im `io-package.json` gekürzt (Repository-Checker W1032/W2004), keine funktionale Änderung

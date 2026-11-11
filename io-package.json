@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "miele-local",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "titleLang": {
       "en": "Miele@local",
       "de": "Miele@local",
@@ -52,6 +52,19 @@
     "readme": "https://github.com/SmarthomeElektroniker/ioBroker.miele-local/blob/main/README.md",
     "loglevel": "info",
     "news": {
+      "0.4.3": {
+        "en": "control.powerOn/powerOff now switch like the Miele app: DOP2 leaf 2/1586 (appliance state), wake-up and retry on HTTP 500, the previous UserRequest 2/1583 only as fallback; Dop1 for coffee machines with protocol version 2. The effect is checked by reading the status again, errors are explained by HTTP status (403/404/500), every step is in the debug log",
+        "de": "control.powerOn/powerOff schalten jetzt wie die Miele-App: DOP2-Leaf 2/1586 (Gerätezustand), bei HTTP 500 wecken und wiederholen, der bisherige UserRequest 2/1583 nur noch als Rückfall; Dop1 für Kaffeevollautomaten mit Protokollversion 2. Die Wirkung wird durch Nachlesen des Status geprüft, Fehler werden nach HTTP-Status erklärt (403/404/500), jeder Schritt steht im Debug-Log",
+        "ru": "control.powerOn/powerOff теперь включают и выключают как приложение Miele: лист DOP2 2/1586 (состояние прибора), при HTTP 500 пробуждение и повтор, прежний UserRequest 2/1583 только как запасной вариант; Dop1 для кофемашин с версией протокола 2. Результат проверяется повторным чтением статуса, ошибки поясняются по HTTP-статусу (403/404/500), каждый шаг записывается в журнал отладки",
+        "pt": "control.powerOn/powerOff agora ligam e desligam como a app Miele: folha DOP2 2/1586 (estado do aparelho), em caso de HTTP 500 despertar e repetir, o anterior UserRequest 2/1583 apenas como alternativa; Dop1 para máquinas de café com versão de protocolo 2. O efeito é verificado lendo novamente o estado, os erros são explicados pelo código HTTP (403/404/500), cada passo fica no registo de depuração",
+        "nl": "control.powerOn/powerOff schakelen nu zoals de Miele-app: DOP2-leaf 2/1586 (apparaatstatus), bij HTTP 500 wekken en opnieuw proberen, de vorige UserRequest 2/1583 alleen nog als terugval; Dop1 voor koffiemachines met protocolversie 2. Het effect wordt gecontroleerd door de status opnieuw te lezen, fouten worden per HTTP-status uitgelegd (403/404/500), elke stap staat in het debuglog",
+        "fr": "control.powerOn/powerOff commutent désormais comme l'application Miele : feuille DOP2 2/1586 (état de l'appareil), réveil et nouvel essai en cas de HTTP 500, l'ancien UserRequest 2/1583 uniquement en solution de repli ; Dop1 pour les machines à café avec la version de protocole 2. L'effet est vérifié en relisant l'état, les erreurs sont expliquées selon le statut HTTP (403/404/500), chaque étape figure dans le journal de débogage",
+        "it": "control.powerOn/powerOff ora accendono e spengono come l'app Miele: leaf DOP2 2/1586 (stato dell'apparecchio), in caso di HTTP 500 risveglio e nuovo tentativo, il precedente UserRequest 2/1583 solo come ripiego; Dop1 per macchine da caffè con versione di protocollo 2. L'effetto viene verificato rileggendo lo stato, gli errori sono spiegati in base allo stato HTTP (403/404/500), ogni passaggio è nel log di debug",
+        "es": "control.powerOn/powerOff ahora encienden y apagan como la app de Miele: hoja DOP2 2/1586 (estado del aparato), con HTTP 500 despertar y reintentar, el anterior UserRequest 2/1583 solo como alternativa; Dop1 para cafeteras con versión de protocolo 2. El efecto se comprueba volviendo a leer el estado, los errores se explican según el estado HTTP (403/404/500), cada paso queda en el registro de depuración",
+        "pl": "control.powerOn/powerOff włączają i wyłączają teraz tak jak aplikacja Miele: liść DOP2 2/1586 (stan urządzenia), przy HTTP 500 wybudzenie i ponowienie, dotychczasowy UserRequest 2/1583 tylko jako rozwiązanie zapasowe; Dop1 dla ekspresów do kawy z wersją protokołu 2. Efekt jest sprawdzany przez ponowny odczyt statusu, błędy są objaśniane według statusu HTTP (403/404/500), każdy krok trafia do dziennika debugowania",
+        "uk": "control.powerOn/powerOff тепер вмикають і вимикають як застосунок Miele: лист DOP2 2/1586 (стан приладу), при HTTP 500 пробудження й повтор, попередній UserRequest 2/1583 лише як запасний варіант; Dop1 для кавомашин із версією протоколу 2. Результат перевіряється повторним читанням статусу, помилки пояснюються за HTTP-статусом (403/404/500), кожен крок записується в журнал налагодження",
+        "zh-cn": "control.powerOn/powerOff 现在像 Miele 应用一样开关：DOP2 叶 2/1586（设备状态），遇到 HTTP 500 时唤醒并重试，原来的 UserRequest 2/1583 仅作为后备；协议版本 2 的咖啡机使用 Dop1。通过重新读取状态检查效果，按 HTTP 状态（403/404/500）解释错误，每一步都记录在调试日志中"
+      },
       "0.4.2": {
         "en": "Maintenance release: trimmed the version news in io-package.json (repository checker W1032/W2004), no functional change",
         "de": "Pflege-Release: Versionshinweise im io-package.json gekürzt (Repository-Checker W1032/W2004), keine funktionale Änderung",

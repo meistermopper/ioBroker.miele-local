@@ -13,6 +13,7 @@ const { MieleCrypto } = require('./lib/crypto');
 const { MieleDeviceApi } = require('./lib/api');
 const { discover, scanSubnet, istMiele, subnetzVorlagen } = require('./lib/discovery');
 const befehle = require('./lib/befehle');
+const einschalten = require('./lib/einschalten');
 const takt = require('./lib/takt');
 const cloud = require('./lib/cloud');
 const objdef = require('./lib/objects');
@@ -626,7 +627,8 @@ class MieleLocal extends utils.Adapter {
                     `${deviceId}: now at ${f.ip} (was ${vorher.ip}) - please update the IP on the 'Appliances' tab`,
                 );
             }
-            this.devices[deviceId] = { ip: f.ip, route, deviceType, api, active: false };
+            const protocolVersion = ident ? Number(ident.ProtocolVersion) : null;
+            this.devices[deviceId] = { ip: f.ip, route, deviceType, protocolVersion, api, active: false };
             /*
              * Die Sammlungsobjekte schon beim Verbinden anlegen, nicht erst am Zyklusende.
              *
@@ -4304,6 +4306,15 @@ class MieleLocal extends utils.Adapter {
                         `Devices/${dev.route}/DOP2/${USER_REQ_UNIT}/${USER_REQ_LEAF}?idx1=0&idx2=0`,
                         buildUserRequest(opcode),
                     ),
+                // Ein- und Ausschalten wie die Miele-App: 2/1586, Wecken, Rueckfall 2/1583.
+                schalten: (dev, an) =>
+                    einschalten.schalten(dev.api, dev.route, an, {
+                        deviceType: dev.deviceType,
+                        protocolVersion: dev.protocolVersion,
+                        log: this.log,
+                        name: parts[idx - 1],
+                        warten: ms => new Promise(r => this.setTimeout(r, ms)),
+                    }),
                 nachErfolg: () => {
                     // Polling kurz pausieren, dann gezielt den neuen Zustand holen.
                     this.pausePollUntil = Date.now() + 2500;

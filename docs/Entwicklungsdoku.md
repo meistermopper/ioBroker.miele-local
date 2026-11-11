@@ -55,7 +55,8 @@ Beide Formen akzeptiert der Adapter.
 - **Polling** `/State` + `/Ident`, Enum-Dekodierung (Status/Programm/Phase Klartext), Zeiten in
   Minuten, Temperaturen ÷100, Sentinel −32768 → null. Intervall 5 s aktiv / 15 s Ruhe.
 - **Deutsche Datenpunktnamen** als `common.name {en,de}` (Checkbox „Datenpunkt-Namen auf Deutsch").
-- **Steuerung** (opt-in): Start/Stop/Pause/Licht/Ein-Aus via DOP2 UserRequest (2/1583). Nach dem
+- **Steuerung** (opt-in): Start/Stop/Pause/Licht via DOP2 UserRequest (2/1583), Ein-Aus seit 0.4.3 über
+  2/1586 mit Wecken und Rückfall 2/1583 (`lib/einschalten.js`). Nach dem
   Schreiben kurze Poll-Pause (~2,5 s), dann gezielter Refresh.
 - **EcoFeedback** (Energie/Wasser) per DOP2-Leaf 2/6195 — nur wo verfügbar; separates Intervall.
 - **Push** (experimentell): Enrollment (`PUT /SuperVision` + `POST /Subscriptions`) + Listener.

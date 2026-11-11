@@ -61,8 +61,8 @@ setzt der Adapter automatisch zurück).
 | `control.start` | Programm starten | 0x01 | Programm/Vorwahl starten |
 | `control.stop` | Programm stoppen | 0x37 | Programm abbrechen |
 | `control.pause` | Programm pausieren | 0x03 | pausieren |
-| `control.powerOn` | Einschalten | 0x10 | Gerät einschalten |
-| `control.powerOff` | Ausschalten | 0x13 | Gerät ausschalten |
+| `control.powerOn` | Einschalten | 2/1586 = 4, Rückfall 0x10 | Gerät einschalten (seit 0.4.3 wie die App, siehe DOP2-Protokoll.md) |
+| `control.powerOff` | Ausschalten | 2/1586 = 1, Rückfall 0x13 | Gerät ausschalten |
 | `control.lightOn` | Licht an | 0x0d | Beleuchtung ein |
 | `control.lightOff` | Licht aus | 0x0e | Beleuchtung aus |
 
