@@ -25,6 +25,7 @@ Checkbox „Datenpunkt-Namen auf Deutsch" aktiv ist (Standard). Enum-Felder gibt
 | `state.programText` / `state.programId` | Programmbezeichnung | string/number | | laufendes Programm (Klartext je Gerätetyp) |
 | `state.programPhaseText` / `state.programPhase` | Programmphase | string/number | | Phase (z. B. Vorwäsche, Hauptwäsche, Spülen) |
 | `state.remainingMinutes` | Restzeit | number | min | verbleibende Zeit |
+| `state.progress` | Programmfortschritt | number | % | seit 0.5.0: verstrichen / (verstrichen + Rest), nur bei Status 5/6, sonst 0 |
 | `state.elapsedMinutes` | Verstrichene Zeit | number | min | seit Programmstart |
 | `state.startInMinutes` | Startvorwahl | number | min | verbleibende Startverzögerung |
 | `state.temperature` / `…Zone2` / `…Zone3` | Temperatur | number | °C | Ist-Temperatur je Zone (null = n/v) |
@@ -65,6 +66,7 @@ setzt der Adapter automatisch zurück).
 | `control.powerOff` | Ausschalten | 2/1586 = 1, Rückfall 0x13 | Gerät ausschalten |
 | `control.lightOn` | Licht an | 0x0d | Beleuchtung ein |
 | `control.lightOff` | Licht aus | 0x0e | Beleuchtung aus |
+| `control.canPowerOn` … `canStop` | Einschalten/Ausschalten/Start/Pause/Stopp möglich | – | seit 0.5.0, nur lesen: Befehl im jetzigen Zustand sinnvoll und vom Gerät unterstützt (lib/geraetemanager.js `angebot`); die Gerätekarten blenden ihre Knöpfe damit live ein und aus |
 
 ## info (Instanz-weit)
 

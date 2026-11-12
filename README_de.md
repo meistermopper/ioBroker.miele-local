@@ -73,6 +73,7 @@ Jedes Gerät wird ein Objekt mit seiner Seriennummer als Kennung. Darunter:
 | `remainingMinutes`, `elapsedMinutes`, `startInMinutes` | Zeiten in Minuten |
 | `remainingSeconds`, `elapsedSeconds` | sekundengenau, wenn eingeschaltet |
 | `estimatedEndTime` / `estimatedEndTimeText` | voraussichtliches Ende (Zeitstempel in ms / `HH:MM`) |
+| `progress` | Programmfortschritt in % (verstrichen / (verstrichen + Rest)), 0, solange nichts läuft |
 | `temperature`, `targetTemperature` (dazu Zone 2 und 3) | Temperaturen |
 | `signalDoor`, `signalInfo`, `signalFailure` | Tür- und Signalmerker |
 | `mobileStart` | ob das Gerät gerade Fernsteuerung annimmt |
@@ -81,6 +82,14 @@ Jedes Gerät wird ein Objekt mit seiner Seriennummer als Kennung. Darunter:
 Rohwert und `…Text` stehen mit Absicht nebeneinander: Mit der Zahl rechnet und zeichnet man, den
 Text zeigt man an. Seit 0.3.37 trägt der Rohwert die Klartextliste selbst, der Textdatenpunkt
 wird damit an den meisten Stellen entbehrlich.
+
+### `control` – Befehle (nur mit freigegebener Gerätesteuerung)
+
+`start`, `stop`, `pause`, `powerOn`, `powerOff`, `lightOn`, `lightOff`: `true` schreiben sendet
+den Befehl; der Adapter bestätigt jeden Befehl, den Grund eines Fehlschlags nennt der Kommentar
+des Datenpunkts. `canStart`, `canStop`, `canPause`, `canPowerOn`, `canPowerOff` (nur lesen) sagen,
+ob der Befehl im jetzigen Zustand sinnvoll ist und das Gerät ihn kann – die Gerätekarten blenden
+ihre Knöpfe damit ein und aus, VIS kann das genauso.
 
 ### `info` – was das Gerät ist
 
@@ -324,7 +333,14 @@ Reverse-Engineering-Arbeit der Projekte `MieleRESTServer` (akappner),
 	### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.5.0 (2026-11-12)
+- (SmarthomeElektroniker) Device-Manager (`@iobroker/dm-utils`, Issue #22, Anregung von mcm1957): je Gerät eine Karte für den laufenden Betrieb. Im Kopf stehen Name und Modell, die Seriennummer einmal darunter. Status, Programm, Phase, Startzeit, Restzeit und voraussichtliches Ende (groß) sowie ein Fortschrittsbalken; leere Werte werden ausgeblendet statt als leere Zeile zu erscheinen. Störung, offene Tür, Hinweise im Gerätedisplay und ein gesperrter Fernstart (MobileStart) erscheinen als farbige Zeile, solange sie anstehen. Aufgeklappt zeigt die Karte weitere Werte (Temperaturen, verstrichene Zeit, Schleuderdrehzahl, Licht, MobileStart, EcoFeedback, Betriebsstunden). Bewusst keine Konfigurationsaktionen auf den Karten
+- (SmarthomeElektroniker) Mit freigegebener Steuerung zeigt die Karte nur die Befehle, die gerade sinnvoll sind und die das Gerät kann: aus → Ein; bereit/programmiert → Start, Aus; läuft → Pause, Stopp; pausiert → Start, Stopp; Ende/Störung → Aus. Start nur mit MobileStart, Pause nur bei Waschmaschinen und Trocknern, kein Schalten von Kühlgeräten und Kochfeldern. Die Knöpfe folgen dem Zustand live; jeder Befehl außer Licht fragt nach und schreibt die vorhandenen `control.*`-Datenpunkte
+- (SmarthomeElektroniker) Das Licht ist ein einziger Umschalter: Symbol, Beschriftung und Tooltip zeigen den aktuellen Zustand, ein Klick schaltet ins Gegenteil, ohne Rückfrage. Die Prozentzahl steht direkt am Fortschrittsbalken
+- (SmarthomeElektroniker) Fehlerbehebung: Handeingaben, Scan-Schalter und Feinaufzeichnung der Datensammlung (`collection.*`) wirkten nicht, seit der Kanal in 0.3.38 von `sammlung` umbenannt wurde
+- (SmarthomeElektroniker) Neue Datenpunkte `control.canPowerOn`, `canPowerOff`, `canStart`, `canPause`, `canStop` (nur lesen, auch für VIS) und `state.progress` (Programmfortschritt in %)
+
+### 0.4.3 (2026-11-10)
 - `control.powerOn`/`powerOff` schalten jetzt wie die Miele-App: DOP2-Leaf `2/1586` (Gerätezustand 4 = ein, 1 = aus), bei HTTP 500 wecken mit `{"DeviceAction":2}` und wiederholen (höchstens zwei Runden), der bisherige UserRequest `2/1583` nur noch als Rückfall; Kaffeevollautomaten mit Protokollversion 2 über Dop1-Objekt 1101. Die Wirkung wird durch Nachlesen des Status geprüft, Fehler werden nach HTTP-Status erklärt (403/404/500), RemoteEnable wird nur protokolliert, jeder Schritt steht im Debug-Log.
 
 ### 0.4.2

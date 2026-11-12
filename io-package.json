@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "miele-local",
-    "version": "0.4.3",
+    "version": "0.5.0",
     "titleLang": {
       "en": "Miele@local",
       "de": "Miele@local",
@@ -52,6 +52,19 @@
     "readme": "https://github.com/SmarthomeElektroniker/ioBroker.miele-local/blob/main/README.md",
     "loglevel": "info",
     "news": {
+      "0.5.0": {
+        "en": "Device manager cards per appliance: name and model, status, programme, phase, remaining time, end time and a progress bar; fault, door open and notices highlighted. With device control enabled, only the commands that make sense in the current state are shown and follow it live (new states control.can*, state.progress); light as a single toggle. Fix: inputs of the data collection had no effect since 0.3.38",
+        "de": "Gerätekarten im Device-Manager: Name und Modell, Status, Programm, Phase, Restzeit, Ende und Fortschrittsbalken; Störung, offene Tür und Hinweise hervorgehoben. Mit freigegebener Steuerung erscheinen nur die Befehle, die im jetzigen Zustand sinnvoll sind, und folgen ihm live (neue Datenpunkte control.can*, state.progress); Licht als ein Umschalter. Fehlerbehebung: Eingaben der Datensammlung wirkten seit 0.3.38 nicht",
+        "ru": "Карточки приборов в диспетчере устройств: название и модель, статус, программа, фаза, оставшееся время, время окончания и индикатор хода; неисправность, открытая дверца и сообщения выделены. При разрешённом управлении показываются только команды, уместные в текущем состоянии, и они обновляются в реальном времени (новые точки данных control.can*, state.progress); свет — одна кнопка-переключатель. Исправлено: вводы сбора данных не действовали с версии 0.3.38",
+        "pt": "Cartões de aparelho no gestor de dispositivos: nome e modelo, estado, programa, fase, tempo restante, hora de fim e barra de progresso; avaria, porta aberta e avisos destacados. Com o controlo ativado, só aparecem os comandos que fazem sentido no estado atual e acompanham-no em tempo real (novos estados control.can*, state.progress); luz como um único botão alternável. Correção: as entradas da recolha de dados não tinham efeito desde a 0.3.38",
+        "nl": "Apparaatkaarten in de apparaatbeheerder: naam en model, status, programma, fase, resterende tijd, eindtijd en voortgangsbalk; storing, open deur en meldingen gemarkeerd. Met ingeschakelde bediening verschijnen alleen de opdrachten die in de huidige toestand zinvol zijn, en ze volgen die live (nieuwe datapunten control.can*, state.progress); licht als één schakelknop. Opgelost: invoer van de gegevensverzameling had sinds 0.3.38 geen effect",
+        "fr": "Cartes d’appareil dans le gestionnaire d’appareils : nom et modèle, état, programme, phase, temps restant, heure de fin et barre de progression ; panne, porte ouverte et messages mis en évidence. Avec la commande activée, seules les commandes utiles dans l’état actuel sont affichées et le suivent en direct (nouveaux états control.can*, state.progress) ; lumière en un seul bouton à bascule. Correction : les saisies de la collecte de données étaient sans effet depuis la 0.3.38",
+        "it": "Schede apparecchio nel gestore dispositivi: nome e modello, stato, programma, fase, tempo rimanente, ora di fine e barra di avanzamento; guasto, sportello aperto e avvisi evidenziati. Con il controllo abilitato compaiono solo i comandi sensati nello stato attuale, aggiornati in tempo reale (nuovi stati control.can*, state.progress); luce come unico pulsante a commutazione. Correzione: gli inserimenti della raccolta dati non avevano effetto dalla 0.3.38",
+        "es": "Tarjetas de aparato en el gestor de dispositivos: nombre y modelo, estado, programa, fase, tiempo restante, hora de fin y barra de progreso; avería, puerta abierta y avisos resaltados. Con el control activado solo aparecen los comandos que tienen sentido en el estado actual y lo siguen en directo (nuevos estados control.can*, state.progress); luz como un único botón conmutador. Corrección: las entradas de la recogida de datos no tenían efecto desde la 0.3.38",
+        "pl": "Karty urządzeń w menedżerze urządzeń: nazwa i model, status, program, faza, pozostały czas, godzina zakończenia i pasek postępu; usterka, otwarte drzwi i komunikaty wyróżnione. Przy włączonym sterowaniu widoczne są tylko polecenia sensowne w bieżącym stanie, aktualizowane na żywo (nowe stany control.can*, state.progress); światło jako jeden przełącznik. Poprawka: wpisy zbierania danych nie działały od wersji 0.3.38",
+        "uk": "Картки приладів у менеджері пристроїв: назва й модель, статус, програма, фаза, залишок часу, час завершення та індикатор перебігу; несправність, відчинені дверцята й повідомлення виділено. За дозволеного керування показуються лише команди, доречні в поточному стані, і вони оновлюються наживо (нові точки даних control.can*, state.progress); світло — одна кнопка-перемикач. Виправлено: введення збору даних не діяли з версії 0.3.38",
+        "zh-cn": "设备管理器中的设备卡片：名称和型号、状态、程序、阶段、剩余时间、结束时间和进度条；故障、门已打开和提示会突出显示。启用控制后，只显示当前状态下有意义的命令，并实时更新（新数据点 control.can*、state.progress）；灯光改为单个切换按钮。修复：自 0.3.38 起数据收集的输入无效"
+      },
       "0.4.3": {
         "en": "control.powerOn/powerOff now switch like the Miele app: DOP2 leaf 2/1586 (appliance state), wake-up and retry on HTTP 500, the previous UserRequest 2/1583 only as fallback; Dop1 for coffee machines with protocol version 2. The effect is checked by reading the status again, errors are explained by HTTP status (403/404/500), every step is in the debug log",
         "de": "control.powerOn/powerOff schalten jetzt wie die Miele-App: DOP2-Leaf 2/1586 (Gerätezustand), bei HTTP 500 wecken und wiederholen, der bisherige UserRequest 2/1583 nur noch als Rückfall; Dop1 für Kaffeevollautomaten mit Protokollversion 2. Die Wirkung wird durch Nachlesen des Status geprüft, Fehler werden nach HTTP-Status erklärt (403/404/500), jeder Schritt steht im Debug-Log",
@@ -129,19 +142,6 @@
         "pl": "Tylko angielskie identyfikatory: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; ustawienia z angielskimi kluczami (collectorActive, leafStates, energyMeters ...), przenoszone jednorazowo przy starcie; stany tekstowe zależą od opcji niemieckich nazw; pętle w tle już się nie nakładają",
         "uk": "Лише англійські ID: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; налаштування з англійськими ключами (collectorActive, leafStates, energyMeters ...), переносяться один раз під час запуску; текстові стани залежать від опції німецьких назв; фонові цикли більше не перекриваються",
         "zh-cn": "仅保留英文 ID：eco.quelle -> eco.source，eco.felderJson -> eco.fieldsJson；设置使用英文键（collectorActive、leafStates、energyMeters ...），启动时一次性迁移；文本状态遵循德语名称选项；后台循环不再重叠"
-      },
-      "0.3.44": {
-        "en": "History objects are only rewritten when they actually changed - no more empty (null) points in the history adapter after every restart",
-        "de": "History-Objekte werden nur noch geschrieben, wenn sie sich wirklich geändert haben - keine leeren (null) Punkte mehr im History-Adapter nach jedem Neustart",
-        "ru": "Объекты истории перезаписываются только при реальном изменении - больше нет пустых (null) точек в адаптере history после каждого перезапуска",
-        "pt": "Os objetos de histórico só são regravados quando realmente mudam - sem mais pontos vazios (null) no adaptador history após cada reinício",
-        "nl": "Historie-objecten worden alleen herschreven als ze echt gewijzigd zijn - geen lege (null) punten meer in de history-adapter na elke herstart",
-        "fr": "Les objets d'historique ne sont réécrits que s'ils ont réellement changé - plus de points vides (null) dans l'adaptateur history après chaque redémarrage",
-        "it": "Gli oggetti della cronologia vengono riscritti solo se sono effettivamente cambiati - niente più punti vuoti (null) nell'adattatore history dopo ogni riavvio",
-        "es": "Los objetos de historial solo se reescriben cuando realmente cambian - ya no hay puntos vacíos (null) en el adaptador history tras cada reinicio",
-        "pl": "Obiekty historii są zapisywane ponownie tylko przy rzeczywistej zmianie - koniec z pustymi (null) punktami w adapterze history po każdym restarcie",
-        "uk": "Об'єкти історії перезаписуються лише за реальної зміни - більше немає порожніх (null) точок в адаптері history після кожного перезапуску",
-        "zh-cn": "历史对象仅在实际更改时才会重写 - 每次重启后 history 适配器中不再出现空 (null) 点"
       }
     },
     "mode": "daemon",
@@ -163,6 +163,10 @@
       }
     ],
     "messagebox": true,
+    "supportedMessages": {
+      "custom": true,
+      "deviceManager": true
+    },
     "supportCustoms": false
   },
   "encryptedNative": [

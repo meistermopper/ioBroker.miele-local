@@ -70,6 +70,7 @@ Every appliance becomes one device with its serial number as the ID. Below it:
 | `remainingMinutes`, `elapsedMinutes`, `startInMinutes` | times in minutes |
 | `remainingSeconds`, `elapsedSeconds` | to the second, if enabled |
 | `estimatedEndTime` / `estimatedEndTimeText` | projected finish (timestamp in ms / `HH:MM`) |
+| `progress` | programme progress in % (elapsed / (elapsed + remaining)), 0 while nothing runs |
 | `temperature`, `targetTemperature` (plus zones 2 and 3) | temperatures |
 | `signalDoor`, `signalInfo`, `signalFailure` | door and signal flags |
 | `mobileStart` | whether the appliance currently accepts remote control |
@@ -78,6 +79,14 @@ Every appliance becomes one device with its serial number as the ID. Below it:
 The raw numbers and their `…Text` counterparts exist side by side on purpose: the raw value is
 what you compare and chart, the text is what you display. Since 0.3.37 the raw value itself
 carries the plain-text list, so in most places the text state is no longer needed.
+
+### `control` — commands (only with device control enabled)
+
+`start`, `stop`, `pause`, `powerOn`, `powerOff`, `lightOn`, `lightOff`: write `true` to send the
+command; the adapter acknowledges every command, the reason for a failure is in the state comment.
+`canStart`, `canStop`, `canPause`, `canPowerOn`, `canPowerOff` (read only) tell whether the
+command makes sense in the current state and is supported by the appliance - the device cards show
+their buttons with them, VIS can do the same.
 
 ### `info` — what the appliance is
 
@@ -309,6 +318,13 @@ engineering work of the projects `MieleRESTServer` (akappner),
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.5.0 (2026-11-12)
+- (SmarthomeElektroniker) Device manager support (`@iobroker/dm-utils`, issue #22, suggested by mcm1957): one card per appliance for the running operation. The header shows name and model, the serial number appears once below it. Status, programme, phase, start time, remaining time and estimated end (large), plus a progress bar; empty values are hidden instead of showing as blank lines. Fault, door open, notices on the appliance display and a locked remote start (MobileStart) are shown as coloured lines while they are active. Expanding the card shows further values (temperatures, elapsed time, spin speed, light, MobileStart, EcoFeedback, operating hours). Deliberately no configuration actions on the cards
+- (SmarthomeElektroniker) With device control enabled the card shows only the commands that make sense right now and that the appliance supports: off → On; ready/programmed → Start, Off; running → Pause, Stop; paused → Start, Stop; end/fault → Off. Start only with MobileStart, Pause only on washing machines and dryers, no switching of fridges and hobs. The buttons follow the state live; every command except the light asks for confirmation and writes the existing `control.*` states
+- (SmarthomeElektroniker) The light is a single toggle button: symbol, label and tooltip show the current state, a click switches to the opposite, without confirmation. The percentage sits right next to the progress bar
+- (SmarthomeElektroniker) Fix: manual inputs, the scan switch and the fine recording of the data collection (`collection.*`) had no effect since the channel was renamed from `sammlung` in 0.3.38
+- (SmarthomeElektroniker) New states `control.canPowerOn`, `canPowerOff`, `canStart`, `canPause`, `canStop` (read only, also usable in VIS) and `state.progress` (programme progress in %)
+
 ### 0.4.3 (2026-11-10)
 - (SmarthomeElektroniker) `control.powerOn`/`powerOff` now switch like the Miele app: DOP2 leaf `2/1586` (appliance state 4 = on, 1 = off), on HTTP 500 wake-up with `{"DeviceAction":2}` and retry (at most two rounds), the previous UserRequest `2/1583` only as fallback; coffee machines with protocol version 2 via Dop1 object 1101. The effect is checked by reading the status again, failures are explained by HTTP status (403/404/500), RemoteEnable is only logged, every step is in the debug log
 

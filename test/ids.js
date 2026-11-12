@@ -101,4 +101,10 @@ describe('Einstellungen auf englische Namen umziehen (0.3.45, Review 03.10.2026)
     it('zieht eco.felderJson nach eco.fieldsJson um', () => {
         expect(ids.umzuege('X')).to.deep.include({ alt: 'X.eco.felderJson', neu: 'X.eco.fieldsJson' });
     });
+
+    it('main.js erkennt Eingaben im Kanal collection (nicht mehr "sammlung")', () => {
+        const quelle = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'main.js'), 'utf8');
+        expect(quelle).to.not.contain("indexOf('sammlung')");
+        expect(quelle.match(/parts\.indexOf\(ids\.KANAL\.collection\)/g)).to.have.length(2);
+    });
 });

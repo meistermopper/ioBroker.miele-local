@@ -54,6 +54,7 @@ const enroll = require('./lib/enroll');
 const dop2 = require('./lib/dop2');
 const stats = require('./lib/stats');
 const { mussNachziehen } = require('./lib/objektabgleich');
+const { MieleGeraeteManager, angebot, fortschritt } = require('./lib/geraetemanager');
 
 /*
  * EcoFeedback: DOP2-Leaf 2/6195 (bislang nur Waschmaschinen liefern ihn).
@@ -235,6 +236,9 @@ class MieleLocal extends utils.Adapter {
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
+        // Geraetekarten im Device-Manager (Issue #22): nur Betrieb und Alltagsbefehle, siehe
+        // lib/geraetemanager.js. Haengt sich selbst an 'message' und beantwortet die dm:-Befehle.
+        this.geraeteManager = new MieleGeraeteManager(this);
     }
 
     /**
@@ -855,6 +859,53 @@ class MieleLocal extends utils.Adapter {
                     native: { opcode: c.opcode },
                 });
             }
+            // Welche Befehle gerade sinnvoll sind - die Geraetekarten haengen ihre Knoepfe daran.
+            for (const a of objdef.ANGEBOT_STATES) {
+                const common = {
+                    name: objdef.nameFor('control', a.sub, a.name, german),
+                    role: 'indicator',
+                    type: 'boolean',
+                    read: true,
+                    write: false,
+                    def: false,
+                };
+                const desc = namen.beschreibung(`control.${a.sub}`, german);
+                if (desc) {
+                    common.desc = desc;
+                }
+                await this.extendObjectAsync(`${deviceId}.control.${a.sub}`, { type: 'state', common, native: {} });
+            }
+        }
+    }
+
+    /**
+     * control.can<Befehl> neu ausrechnen (seit 0.5.0).
+     *
+     * Aus Status, MobileStart-Freigabe, Erreichbarkeit und Geraeteart (lib/geraetemanager.js
+     * angebot). Geschrieben wird nur, was sich aendert - der Wert wandert sonst bei jeder Abfrage
+     * in die Historie.
+     *
+     * @param {string} deviceId Geraete-ID
+     * @param {boolean} [verbunden] Erreichbarkeit, wenn sie der Aufrufer gerade kennt
+     */
+    async angebotAktualisieren(deviceId, verbunden) {
+        if (!this.config.allowControl) {
+            return;
+        }
+        const dev = this.devices && this.devices[deviceId];
+        const lies = async sub => ((await this.getStateAsync(`${deviceId}.${sub}`)) || {}).val;
+        const z = {
+            deviceType: dev && dev.deviceType != null ? Number(dev.deviceType) : Number(await lies('info.deviceType')),
+            status: await lies('state.status'),
+            mobileStart: !!(await lies('state.mobileStart')),
+            verbunden: verbunden !== undefined ? verbunden : !!(await lies('info.connected')),
+        };
+        const jetzt = angebot(z);
+        for (const a of objdef.ANGEBOT_STATES) {
+            await this.setStateChangedAsync(`${deviceId}.control.${a.sub}`, {
+                val: jetzt.includes(a.befehl),
+                ack: true,
+            });
         }
     }
 
@@ -1035,6 +1086,23 @@ class MieleLocal extends utils.Adapter {
                 await this.setStateAsync(`${deviceId}.state.estimatedEndTime`, { val: 0, ack: true });
                 await this.setStateAsync(`${deviceId}.state.estimatedEndTimeText`, { val: '', ack: true });
             }
+        }
+
+        // Fortschritt fuer den Balken auf der Geraetekarte: verstrichen / (verstrichen + Rest).
+        if ('RemainingTime' in state || 'ElapsedTime' in state || statusVal != null) {
+            const lies = async sub => ((await this.getStateAsync(`${deviceId}.state.${sub}`)) || {}).val;
+            const prozent = fortschritt(
+                statusVal != null ? statusVal : await lies('status'),
+                await lies('elapsedMinutes'),
+                await lies('remainingMinutes'),
+            );
+            const obj = await this.getObjectAsync(`${deviceId}.state.progress`);
+            if (obj) {
+                await this.setStateChangedAsync(`${deviceId}.state.progress`, { val: prozent, ack: true });
+            }
+        }
+        if (statusVal != null || 'RemoteEnable' in state) {
+            await this.angebotAktualisieren(deviceId, true);
         }
 
         if (dev && statusVal != null) {
@@ -3318,6 +3386,8 @@ class MieleLocal extends utils.Adapter {
             }
             if (fehler) {
                 await this.setStateAsync(`${deviceId}.info.connected`, { val: false, ack: true });
+                // Nicht erreichbar: keine Knoepfe auf der Karte, bis das Geraet wieder antwortet.
+                await this.angebotAktualisieren(deviceId, false).catch(() => {});
             }
             /*
              * Den Wechsel einmal melden, nicht jeden Fehlversuch.
@@ -4218,7 +4288,9 @@ class MieleLocal extends utils.Adapter {
          * Scan liest ausschliesslich. Ausgeloest wird er von Hand, nicht von selbst: Er
          * belegt das Geraet ueber Minuten, und wann das passt, weiss nur der Mensch davor.
          */
-        const scanIdx = parts.indexOf('sammlung');
+        // Der Kanal heisst seit 0.3.38 "collection" (lib/ids.js). Bis 0.5.0 stand hier noch
+        // 'sammlung' - Handeingaben, Scan-Schalter und Feinaufzeichnung kamen nie an.
+        const scanIdx = parts.indexOf(ids.KANAL.collection);
 
         /*
          * Die Feinaufzeichnung ein- und ausschalten.
@@ -4281,7 +4353,7 @@ class MieleLocal extends utils.Adapter {
             return;
         }
 
-        const sIdx = parts.indexOf('sammlung');
+        const sIdx = parts.indexOf(ids.KANAL.collection);
         if (sIdx > 0 && typeof state.val === 'number' && state.val > 0) {
             const feld = parts[sIdx + 1];
             if (feld === ids.SAMMLUNG.inputEnergy || feld === ids.SAMMLUNG.inputWater) {
@@ -4429,6 +4501,10 @@ class MieleLocal extends utils.Adapter {
     // --- Admin-Nachrichten (OAuth-Login) ---
     async onMessage(obj) {
         if (!obj || !obj.command) {
+            return;
+        }
+        if (obj.command.startsWith('dm:')) {
+            // Beantwortet der Device-Manager selbst (lib/geraetemanager.js).
             return;
         }
         try {
