@@ -80,6 +80,19 @@ The raw numbers and their `…Text` counterparts exist side by side on purpose: 
 what you compare and chart, the text is what you display. Since 0.3.37 the raw value itself
 carries the plain-text list, so in most places the text state is no longer needed.
 
+**Language of the texts.** The `…Text` states are written in German, or in English when the
+option "State names in German" is off - that has not changed, scripts compare against them.
+The device manager cards do not use them: since 0.5.1 a card shows the raw value together with a
+value table in the **system language** of ioBroker (all eleven admin languages). Status,
+programme type, drying step and phase are complete in every language. Programme names come from
+the community translations of Home Assistant; where a language has none there (Ukrainian
+entirely, Polish almost entirely, Russian and Dutch in part) the card shows the English name -
+nothing is guessed. An unknown raw value appears as its number.
+
+With "State names in German" switched off, state names and descriptions stay plain English text
+on purpose: a multilingual name would bring the German name back in a German admin and make the
+option pointless.
+
 ### `control` — commands (only with device control enabled)
 
 `start`, `stop`, `pause`, `powerOn`, `powerOff`, `lightOn`, `lightOff`: write `true` to send the
@@ -318,6 +331,11 @@ engineering work of the projects `MieleRESTServer` (akappner),
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.5.1 (2026-11-12)
+- (SmarthomeElektroniker) Device manager cards show status, programme, phase, programme type and drying step in the system language of ioBroker, in all eleven admin languages. Until now the card showed the `…Text` states, which the adapter writes only in German or English. The card now uses the raw values (`state.status`, `programId`, `programPhase`, `programType`, `dryingStep`) with a value table in the system language; the `…Text` states are unchanged, scripts that compare against them keep working
+- (SmarthomeElektroniker) Translations: the community translations of the Home Assistant Miele integration, own translations where a language is missing there (Ukrainian, Polish, large parts of Russian and Dutch, status 144/145) and a few corrections. Programme names only from Home Assistant, otherwise English - nothing guessed
+- (SmarthomeElektroniker) Descriptions of `control.can*` and `state.progress` in all eleven languages
+
 ### 0.5.0 (2026-11-12)
 - (SmarthomeElektroniker) Device manager support (`@iobroker/dm-utils`, issue #22, suggested by mcm1957): one card per appliance for the running operation. The header shows name and model, the serial number appears once below it. Status, programme, phase, start time, remaining time and estimated end (large), plus a progress bar; empty values are hidden instead of showing as blank lines. Fault, door open, notices on the appliance display and a locked remote start (MobileStart) are shown as coloured lines while they are active. Expanding the card shows further values (temperatures, elapsed time, spin speed, light, MobileStart, EcoFeedback, operating hours). Deliberately no configuration actions on the cards
 - (SmarthomeElektroniker) With device control enabled the card shows only the commands that make sense right now and that the appliance supports: off → On; ready/programmed → Start, Off; running → Pause, Stop; paused → Start, Stop; end/fault → Off. Start only with MobileStart, Pause only on washing machines and dryers, no switching of fridges and hobs. The buttons follow the state live; every command except the light asks for confirmation and writes the existing `control.*` states
@@ -355,6 +373,11 @@ Authors), taken over via [ha-miele-at-lan](https://github.com/tiehfood/ha-miele-
 tiehfood) and cross-checked against
 [ioBroker.miele-unbound](https://github.com/meistermopper/ioBroker.miele-unbound) (MIT, ©
 meistermopper). Thanks to all three projects.
+
+The translations of status, phase and programme names in `lib/werte_ha.js` (shown on the device
+manager cards) are the community translations of the Home Assistant Miele integration (Apache
+License 2.0, © Home Assistant Authors), extracted with `tools/werte-uebersetzungen.js`; gaps and
+a few corrections are in `lib/werte_eigen.js`.
 
 ## License
 

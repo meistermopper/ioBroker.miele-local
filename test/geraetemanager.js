@@ -128,10 +128,11 @@ describe('Geräte-Manager', () => {
         // laufender Betrieb als Datenpunkt-Zeilen auf der Karte (customInfo), keine info-Controls
         expect(k.controls).to.equal(undefined);
         const z = zeilen(k, OFEN);
+        // Status, Programm und Phase haengen seit 0.5.1 am Rohwert (Wertetabelle in Systemsprache)
         expect(Object.keys(z)).to.include.members([
-            'state.statusText',
-            'state.programText',
-            'state.programPhaseText',
+            'state.status',
+            'state.programId',
+            'state.programPhase',
             'state.remainingHHMM',
             'state.estimatedEndTimeText',
             '_state_progress',
@@ -145,8 +146,8 @@ describe('Geräte-Manager', () => {
         expect(z['state.estimatedEndTimeText'].size).to.equal('large');
         expect(z['state.remainingHHMM'].label.de).to.equal('Restzeit');
         expect(z['state.estimatedEndTimeText'].label.de).to.equal('Ende um');
-        expect(z['state.programText'].label.de).to.equal('Programm');
-        expect(z['state.programPhaseText'].label.de).to.equal('Phase');
+        expect(z['state.programId'].label.de).to.equal('Programm');
+        expect(z['state.programPhase'].label.de).to.equal('Phase');
         // eigener Balken als HTML, Prozentzahl in derselben Zeile direkt am Balken
         const balken = z._state_progress;
         expect(balken.type).to.equal('staticText');
@@ -167,9 +168,12 @@ describe('Geräte-Manager', () => {
     it('leere Werte erscheinen nicht als leere Zeile', () => {
         const z = zeilen(karte(OFEN), OFEN);
         const mit = v => ({ v: { val: v } });
-        expect(versteckt(z['state.programText'], mit(''))).to.equal(true);
-        expect(versteckt(z['state.programText'], mit('Heißluft plus'))).to.equal(false);
-        expect(versteckt(z['state.programPhaseText'], { v: null })).to.equal(true);
+        // Programm 0 = "kein Programm", Phase 0 = "laeuft nicht": Zeile weg
+        expect(versteckt(z['state.programId'], mit(0))).to.equal(true);
+        expect(versteckt(z['state.programId'], mit(13))).to.equal(false);
+        expect(versteckt(z['state.programPhase'], { v: null })).to.equal(true);
+        expect(versteckt(z['state.programPhase'], mit(0))).to.equal(true);
+        expect(versteckt(z['state.programPhase'], mit(3073))).to.equal(false);
         expect(versteckt(z['state.remainingHHMM'], mit('0:00'))).to.equal(true);
         expect(versteckt(z['state.remainingHHMM'], mit('1:25'))).to.equal(false);
         expect(versteckt(z['state.estimatedEndTimeText'], mit(''))).to.equal(true);
@@ -177,7 +181,7 @@ describe('Geräte-Manager', () => {
         expect(versteckt(z._state_progress, mit(0))).to.equal(true);
         expect(versteckt(z._state_progress, mit(37))).to.equal(false);
         // der Status steht immer da
-        expect(z['state.statusText'].hidden).to.equal(undefined);
+        expect(z['state.status'].hidden).to.equal(undefined);
         // jede Bedingung haengt an ihrem eigenen Datenpunkt
         expect(z._state_progress.dependsOnStates).to.deep.equal({ v: `${NS}.${OFEN}.state.progress` });
     });

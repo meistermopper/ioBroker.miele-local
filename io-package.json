@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "miele-local",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "titleLang": {
       "en": "Miele@local",
       "de": "Miele@local",
@@ -52,6 +52,19 @@
     "readme": "https://github.com/SmarthomeElektroniker/ioBroker.miele-local/blob/main/README.md",
     "loglevel": "info",
     "news": {
+      "0.5.1": {
+        "en": "Device manager cards show status, programme, phase, programme type and drying step in the system language of ioBroker (all 11 languages; programme names from the Home Assistant translations, otherwise English). The …Text states stay unchanged. Descriptions of control.can* and state.progress in all languages",
+        "de": "Gerätekarten im Device-Manager zeigen Status, Programm, Phase, Programmart und Trockenstufe in der Systemsprache des ioBroker (alle 11 Sprachen; Programmnamen aus den Home-Assistant-Übersetzungen, sonst Englisch). Die …Text-Datenpunkte bleiben unverändert. Beschreibungen von control.can* und state.progress in allen Sprachen",
+        "ru": "Карточки в диспетчере устройств показывают статус, программу, фазу, тип программы и степень сушки на системном языке ioBroker (все 11 языков; названия программ из переводов Home Assistant, иначе на английском). Точки данных …Text не изменились. Описания control.can* и state.progress на всех языках",
+        "pt": "Os cartões do gestor de dispositivos mostram estado, programa, fase, tipo de programa e nível de secagem no idioma do sistema do ioBroker (todos os 11 idiomas; nomes de programas das traduções do Home Assistant, caso contrário em inglês). Os estados …Text ficam inalterados. Descrições de control.can* e state.progress em todos os idiomas",
+        "nl": "Kaarten in de apparaatbeheerder tonen status, programma, fase, programmatype en droogstand in de systeemtaal van ioBroker (alle 11 talen; programmanamen uit de Home Assistant-vertalingen, anders Engels). De …Text-datapunten blijven ongewijzigd. Beschrijvingen van control.can* en state.progress in alle talen",
+        "fr": "Les cartes du gestionnaire d'appareils affichent l'état, le programme, la phase, le type de programme et le niveau de séchage dans la langue système d'ioBroker (les 11 langues ; noms de programmes issus des traductions de Home Assistant, sinon en anglais). Les états …Text restent inchangés. Descriptions de control.can* et state.progress dans toutes les langues",
+        "it": "Le schede del gestore dispositivi mostrano stato, programma, fase, tipo di programma e grado di asciugatura nella lingua di sistema di ioBroker (tutte le 11 lingue; nomi dei programmi dalle traduzioni di Home Assistant, altrimenti in inglese). Gli stati …Text restano invariati. Descrizioni di control.can* e state.progress in tutte le lingue",
+        "es": "Las tarjetas del gestor de dispositivos muestran estado, programa, fase, tipo de programa y nivel de secado en el idioma del sistema de ioBroker (los 11 idiomas; nombres de programas de las traducciones de Home Assistant, si no en inglés). Los estados …Text no cambian. Descripciones de control.can* y state.progress en todos los idiomas",
+        "pl": "Karty w menedżerze urządzeń pokazują status, program, fazę, rodzaj programu i stopień suszenia w języku systemowym ioBroker (wszystkie 11 języków; nazwy programów z tłumaczeń Home Assistant, w przeciwnym razie po angielsku). Punkty danych …Text pozostają bez zmian. Opisy control.can* i state.progress we wszystkich językach",
+        "uk": "Картки в диспетчері пристроїв показують статус, програму, фазу, тип програми та ступінь сушіння системною мовою ioBroker (усі 11 мов; назви програм з перекладів Home Assistant, інакше англійською). Точки даних …Text не змінено. Описи control.can* і state.progress усіма мовами",
+        "zh-cn": "设备管理器卡片以 ioBroker 系统语言显示状态、程序、阶段、程序类型和烘干程度（全部 11 种语言；程序名称来自 Home Assistant 的翻译，否则为英文）。…Text 数据点保持不变。control.can* 和 state.progress 的说明提供所有语言版本"
+      },
       "0.5.0": {
         "en": "Device manager cards per appliance: name and model, status, programme, phase, remaining time, end time and a progress bar; fault, door open and notices highlighted. With device control enabled, only the commands that make sense in the current state are shown and follow it live (new states control.can*, state.progress); light as a single toggle. Fix: inputs of the data collection had no effect since 0.3.38",
         "de": "Gerätekarten im Device-Manager: Name und Modell, Status, Programm, Phase, Restzeit, Ende und Fortschrittsbalken; Störung, offene Tür und Hinweise hervorgehoben. Mit freigegebener Steuerung erscheinen nur die Befehle, die im jetzigen Zustand sinnvoll sind, und folgen ihm live (neue Datenpunkte control.can*, state.progress); Licht als ein Umschalter. Fehlerbehebung: Eingaben der Datensammlung wirkten seit 0.3.38 nicht",
@@ -129,19 +142,6 @@
         "pl": "Tylko pracujące urządzenie jest odpytywane w krótkim interwale, urządzenia w spoczynku zachowują interwał spoczynku - mniej zapytań do modułów Miele (dotąd wszystkie były odpytywane krótko, gdy tylko jedno pracowało)",
         "uk": "З коротким інтервалом опитується лише працюючий прилад, прилади у спокої зберігають інтервал спокою - менше запитів до модулів Miele (досі всі прилади опитувалися з коротким інтервалом, щойно працював один)",
         "zh-cn": "只有正在运行的电器使用短间隔轮询，空闲电器保持空闲间隔 - 减少对 Miele 模块的请求（此前只要有一台在运行，所有电器都按短间隔轮询）"
-      },
-      "0.3.45": {
-        "en": "Only English IDs left: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; settings use English keys (collectorActive, leafStates, energyMeters ...), migrated once on start; text states follow the German names option; background loops never overlap",
-        "de": "Nur noch englische IDs: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; Einstellungen mit englischen Namen (collectorActive, leafStates, energyMeters ...), beim Start einmalig übernommen; Textdatenpunkte folgen der Option „Deutsche Namen“; Hintergrundschleifen überlappen nicht mehr",
-        "ru": "Остались только английские ID: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; настройки с английскими ключами (collectorActive, leafStates, energyMeters ...), переносятся один раз при запуске; текстовые состояния следуют опции немецких имён; фоновые циклы больше не перекрываются",
-        "pt": "Apenas IDs em inglês: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; configurações com chaves em inglês (collectorActive, leafStates, energyMeters ...), migradas uma vez ao iniciar; estados de texto seguem a opção de nomes em alemão; ciclos em segundo plano não se sobrepõem mais",
-        "nl": "Alleen nog Engelse ID's: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; instellingen met Engelse sleutels (collectorActive, leafStates, energyMeters ...), eenmalig bij het starten overgenomen; tekststatussen volgen de optie voor Duitse namen; achtergrondlussen overlappen niet meer",
-        "fr": "Uniquement des ID en anglais : eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson ; paramètres avec des clés anglaises (collectorActive, leafStates, energyMeters ...), migrés une fois au démarrage ; les états texte suivent l'option des noms allemands ; les boucles d'arrière-plan ne se chevauchent plus",
-        "it": "Solo ID in inglese: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; impostazioni con chiavi inglesi (collectorActive, leafStates, energyMeters ...), migrate una volta all'avvio; gli stati di testo seguono l'opzione dei nomi tedeschi; i cicli in background non si sovrappongono più",
-        "es": "Solo ID en inglés: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; ajustes con claves en inglés (collectorActive, leafStates, energyMeters ...), migrados una vez al iniciar; los estados de texto siguen la opción de nombres en alemán; los bucles en segundo plano ya no se solapan",
-        "pl": "Tylko angielskie identyfikatory: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; ustawienia z angielskimi kluczami (collectorActive, leafStates, energyMeters ...), przenoszone jednorazowo przy starcie; stany tekstowe zależą od opcji niemieckich nazw; pętle w tle już się nie nakładają",
-        "uk": "Лише англійські ID: eco.quelle -> eco.source, eco.felderJson -> eco.fieldsJson; налаштування з англійськими ключами (collectorActive, leafStates, energyMeters ...), переносяться один раз під час запуску; текстові стани залежать від опції німецьких назв; фонові цикли більше не перекриваються",
-        "zh-cn": "仅保留英文 ID：eco.quelle -> eco.source，eco.felderJson -> eco.fieldsJson；设置使用英文键（collectorActive、leafStates、energyMeters ...），启动时一次性迁移；文本状态遵循德语名称选项；后台循环不再重叠"
       }
     },
     "mode": "daemon",

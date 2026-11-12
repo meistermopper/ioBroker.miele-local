@@ -83,6 +83,19 @@ Rohwert und `…Text` stehen mit Absicht nebeneinander: Mit der Zahl rechnet und
 Text zeigt man an. Seit 0.3.37 trägt der Rohwert die Klartextliste selbst, der Textdatenpunkt
 wird damit an den meisten Stellen entbehrlich.
 
+**Sprache der Texte.** Die `…Text`-Datenpunkte stehen auf Deutsch, bei abgeschalteter Option
+„Datenpunkt-Namen auf Deutsch“ auf Englisch – daran ändert sich nichts, Skripte vergleichen damit.
+Die Gerätekarten im Device-Manager nutzen sie nicht: Seit 0.5.1 zeigt eine Karte den Rohwert mit
+einer Wertetabelle in der **Systemsprache** des ioBroker (alle elf Admin-Sprachen). Status,
+Programmart, Trockenstufe und Phase sind in jeder Sprache vollständig. Programmnamen stammen aus
+der Community-Übersetzung von Home Assistant; wo eine Sprache dort keine hat (Ukrainisch ganz,
+Polnisch fast ganz, Russisch und Niederländisch teilweise), zeigt die Karte den englischen Namen –
+geraten wird nicht. Ein unbekannter Rohwert erscheint als Zahl.
+
+Ist „Datenpunkt-Namen auf Deutsch“ aus, bleiben Namen und Beschreibungen mit Absicht schlichter
+englischer Text: Ein mehrsprachiger Name brächte im deutschen Admin wieder den deutschen Namen
+und machte die Option sinnlos.
+
 ### `control` – Befehle (nur mit freigegebener Gerätesteuerung)
 
 `start`, `stop`, `pause`, `powerOn`, `powerOff`, `lightOn`, `lightOff`: `true` schreiben sendet
@@ -333,6 +346,11 @@ Reverse-Engineering-Arbeit der Projekte `MieleRESTServer` (akappner),
 	### **WORK IN PROGRESS**
 -->
 
+### 0.5.1 (2026-11-12)
+- (SmarthomeElektroniker) Gerätekarten im Device-Manager zeigen Status, Programm, Phase, Programmart und Trockenstufe in der Systemsprache des ioBroker, in allen elf Admin-Sprachen. Bisher standen auf der Karte die `…Text`-Datenpunkte, die der Adapter nur auf Deutsch oder Englisch schreibt. Jetzt nutzt die Karte die Rohwerte (`state.status`, `programId`, `programPhase`, `programType`, `dryingStep`) mit einer Wertetabelle in der Systemsprache; die `…Text`-Datenpunkte bleiben unverändert, Skripte, die damit vergleichen, laufen weiter
+- (SmarthomeElektroniker) Übersetzungen: die Community-Übersetzungen der Miele-Integration von Home Assistant, eigene Übersetzungen, wo dort eine Sprache fehlt (Ukrainisch, Polnisch, große Teile von Russisch und Niederländisch, Status 144/145), und einige Berichtigungen. Programmnamen nur aus Home Assistant, sonst Englisch – nichts geraten
+- (SmarthomeElektroniker) Beschreibungen von `control.can*` und `state.progress` in allen elf Sprachen
+
 ### 0.5.0 (2026-11-12)
 - (SmarthomeElektroniker) Device-Manager (`@iobroker/dm-utils`, Issue #22, Anregung von mcm1957): je Gerät eine Karte für den laufenden Betrieb. Im Kopf stehen Name und Modell, die Seriennummer einmal darunter. Status, Programm, Phase, Startzeit, Restzeit und voraussichtliches Ende (groß) sowie ein Fortschrittsbalken; leere Werte werden ausgeblendet statt als leere Zeile zu erscheinen. Störung, offene Tür, Hinweise im Gerätedisplay und ein gesperrter Fernstart (MobileStart) erscheinen als farbige Zeile, solange sie anstehen. Aufgeklappt zeigt die Karte weitere Werte (Temperaturen, verstrichene Zeit, Schleuderdrehzahl, Licht, MobileStart, EcoFeedback, Betriebsstunden). Bewusst keine Konfigurationsaktionen auf den Karten
 - (SmarthomeElektroniker) Mit freigegebener Steuerung zeigt die Karte nur die Befehle, die gerade sinnvoll sind und die das Gerät kann: aus → Ein; bereit/programmiert → Start, Aus; läuft → Pause, Stopp; pausiert → Start, Stopp; Ende/Störung → Aus. Start nur mit MobileStart, Pause nur bei Waschmaschinen und Trocknern, kein Schalten von Kühlgeräten und Kochfeldern. Die Knöpfe folgen dem Zustand live; jeder Befehl außer Licht fragt nach und schreibt die vorhandenen `control.*`-Datenpunkte
@@ -490,6 +508,11 @@ Authors), übernommen über [ha-miele-at-lan](https://github.com/tiehfood/ha-mie
 tiehfood) und abgeglichen mit
 [ioBroker.miele-unbound](https://github.com/meistermopper/ioBroker.miele-unbound) (MIT, ©
 meistermopper). Danke an alle drei Projekte.
+
+Die Übersetzungen von Status, Phasen und Programmnamen in `lib/werte_ha.js` (für die Gerätekarten
+im Device-Manager) sind die Community-Übersetzungen der Miele-Integration von Home Assistant
+(Apache License 2.0, © Home Assistant Authors), ausgelesen mit `tools/werte-uebersetzungen.js`;
+Lücken und einige Berichtigungen stehen in `lib/werte_eigen.js`.
 
 ## Lizenz
 
